@@ -1,0 +1,21 @@
+.container {
+    background-color: rgba(0, 0, 0, 1);
+    width: 100%;
+    max-width: 1512px;
+}
+
+.header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 1);
+    padding: 10px 0;
+}
+
+.header__logo img {
+    width: 370px;
+    color: rgba(255, 255, 255, 1);
+    ;
+}
+
+
