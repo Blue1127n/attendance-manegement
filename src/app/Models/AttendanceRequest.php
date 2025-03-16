@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 class AttendanceRequest extends Model
 {
@@ -21,12 +22,28 @@ class AttendanceRequest extends Model
     ];
 
     protected $casts = [
-        'status' => 'string', // ENUM型は文字列として扱うので記述しておく
-        'requested_clock_in' => 'string',
-        'requested_clock_out' => 'string',
-        'requested_break_start' => 'string',
-        'requested_break_end' => 'string',
+        'status' => 'string',
     ];
+
+    public function getRequestedClockInAttribute($value)
+    {
+        return $value ? Carbon::parse($value)->format('H:i') : null;
+    }
+
+    public function getRequestedClockOutAttribute($value)
+    {
+        return $value ? Carbon::parse($value)->format('H:i') : null;
+    }
+
+    public function getRequestedBreakStartAttribute($value)
+    {
+        return $value ? Carbon::parse($value)->format('H:i') : null;
+    }
+
+    public function getRequestedBreakEndAttribute($value)
+    {
+        return $value ? Carbon::parse($value)->format('H:i') : null;
+    }
 
     public function user()
     {

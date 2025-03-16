@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 class Attendance extends Model
 {
@@ -19,10 +20,18 @@ class Attendance extends Model
     ];
 
     protected $casts = [
-        'status' => 'string', // ENUM型は文字列として扱うので記述しておく
-        'clock_in' => 'string',
-        'clock_out' => 'string',
+        'status' => 'string',
     ];
+
+    public function getClockInAttribute($value)
+    {
+        return $value ? Carbon::parse($value)->format('H:i') : null;
+    }
+
+    public function getClockOutAttribute($value)
+    {
+        return $value ? Carbon::parse($value)->format('H:i') : null;
+    }
 
     public function user()
     {
