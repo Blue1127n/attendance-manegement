@@ -8,7 +8,7 @@
     <title>@yield('title', 'coachtech')</title>
     <link rel="stylesheet" href="{{ asset('css/sanitize.css') }}">
     <link rel="stylesheet" href="{{ asset('css/common.css') }}">
-    @yield('css')
+    @stack('styles')
 </head>
 
 <body>

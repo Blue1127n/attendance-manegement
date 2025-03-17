@@ -1,6 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\AdminController;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +16,23 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('/admin/login', function () {
+    return view('auth.admin-login');
+})->name('admin.login');
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/attendance', [AttendanceController::class, 'index'])->name('user.attendance');
+    Route::get('/attendance/list', [AttendanceController::class, 'list'])->name('user.attendance.list');
+    Route::get('/attendance/{id}', [AttendanceController::class, 'attendanceDetail'])->name('user.attendance.detail');
+    Route::get('/stamp_correction_request/list', [AttendanceController::class, 'requestList'])->name('user.request.list');
 });
+
+Route::middleware(['auth'])->prefix('admin')->group(function () {
+    Route::get('/attendance/list', [AdminController::class, 'attendanceList'])->name('admin.attendance.list');
+    Route::get('/attendance/{id}', [AdminController::class, 'attendanceDetail'])->name('admin.attendance.detail');
+    Route::get('/staff/list', [AdminController::class, 'staffList'])->name('admin.staff.list');
+    Route::get('/attendance/staff/{id}', [AdminController::class, 'staffAttendance'])->name('admin.staff.attendance');
+    Route::get('/stamp_correction_request/list', [AdminController::class, 'requestList'])->name('admin.request.list');
+    Route::get('/stamp_correction_request/approve/{attendance_correct_request}', [AdminController::class, 'approveRequest'])->name('admin.request.approve');
+});
+
