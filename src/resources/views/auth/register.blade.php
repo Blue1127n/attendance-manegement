@@ -38,16 +38,16 @@
             </div>
 
             <div class="form-group">
-            <label for="password_confirmation">パスワード確認</label>
-            <input type="password" id="password_confirmation" name="password_confirmation">
-            @error('password_confirmation')
-                <div class="error-message">{{ $message }}</div>
-            @enderror
+                <label for="password_confirmation">パスワード確認</label>
+                <input type="password" id="password_confirmation" name="password_confirmation">
+                @error('password_confirmation')
+                    <div class="error-message">{{ $message }}</div>
+                @enderror
 
             <button type="submit">登録する</button>
         </form>
 
         <p><a href="{{ route('login') }}">ログインはこちら</a></p>
     </div>
-    </div>
+</div>
 @endsection
