@@ -7,6 +7,7 @@ use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvi
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -17,7 +18,7 @@ class RouteServiceProvider extends ServiceProvider
      *
      * @var string
      */
-    public const HOME = '/';
+    //public const HOME = '/email/verify';
 
     /**
      * The controller namespace for the application.
@@ -47,6 +48,16 @@ class RouteServiceProvider extends ServiceProvider
                 ->namespace($this->namespace)
                 ->group(base_path('routes/web.php'));
         });
+    }
+
+    /**
+     * Determine where to redirect users after login.
+     */
+    public function redirectTo()
+    {
+        return Auth::user() && Auth::user()->hasVerifiedEmail()
+            ? '/attendance' // 認証済みなら勤怠登録画面へ
+            : '/email/verify'; // 未認証ならメール認証誘導画面へ
     }
 
     /**

@@ -22,20 +22,6 @@ Route::get('/admin/login', function () {
     return view('auth.admin-login');
 })->name('admin.login');
 
-Route::get('/email/verify', function () {
-    return view('auth.verify-email');
-})->middleware('auth')->name('verification.notice');
-
-Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
-    $request->fulfill();
-    return redirect('/dashboard');
-})->middleware(['auth', 'signed'])->name('verification.verify');
-
-Route::post('/email/verification-notification', function (Request $request) {
-    $request->user()->sendEmailVerificationNotification();
-    return back()->with('message', '認証メールを再送しました！');
-})->middleware(['auth', 'throttle:6,1'])->name('verification.send');
-
 Route::middleware(['auth'])->group(function () {
     Route::get('/attendance', [AttendanceController::class, 'index'])->name('user.attendance');
     Route::get('/attendance/list', [AttendanceController::class, 'list'])->name('user.attendance.list');
