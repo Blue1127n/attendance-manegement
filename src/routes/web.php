@@ -6,6 +6,7 @@ use App\Http\Controllers\AdminController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Laravel\Fortify\Fortify;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,14 +23,14 @@ Route::get('/admin/login', function () {
     return view('auth.admin-login');
 })->name('admin.login');
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/attendance', [AttendanceController::class, 'index'])->name('user.attendance');
     Route::get('/attendance/list', [AttendanceController::class, 'list'])->name('user.attendance.list');
     Route::get('/attendance/{id}', [AttendanceController::class, 'attendanceDetail'])->name('user.attendance.detail');
     Route::get('/stamp_correction_request/list', [AttendanceController::class, 'requestList'])->name('user.request.list');
 });
 
-Route::middleware(['auth'])->prefix('admin')->group(function () {
+Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
     Route::get('/attendance/list', [AdminController::class, 'attendanceList'])->name('admin.attendance.list');
     Route::get('/attendance/{id}', [AdminController::class, 'attendanceDetail'])->name('admin.attendance.detail');
     Route::get('/staff/list', [AdminController::class, 'staffList'])->name('admin.staff.list');
