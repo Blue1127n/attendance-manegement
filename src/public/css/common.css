@@ -44,4 +44,20 @@ nav a:hover {
     text-decoration: underline;
 }
 
+.logout-button {
+    all: unset;
+    color: rgba(255, 255, 255, 1);
+    background-color: rgba(0, 0, 0, 1);
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 100%;
+    letter-spacing: 0%;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+}
 
+.logout-button:hover {
+    text-decoration: underline;
+}
