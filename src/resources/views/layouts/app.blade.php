@@ -17,6 +17,7 @@
             <div class="header__logo">
                 <img src="{{ asset('images/logo.png') }}" alt="Logo">
             </div>
+            @yield('header')
         </header>
 
         <main>

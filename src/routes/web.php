@@ -25,6 +25,10 @@ Route::get('/admin/login', function () {
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/attendance', [AttendanceController::class, 'index'])->name('user.attendance');
+    Route::post('/attendance/clock-in', [AttendanceController::class, 'clockIn'])->name('user.attendance.clockIn');
+    Route::post('/attendance/clock-out', [AttendanceController::class, 'clockOut'])->name('user.attendance.clockOut');
+    Route::post('/attendance/start-break', [AttendanceController::class, 'startBreak'])->name('user.attendance.startBreak');
+    Route::post('/attendance/end-break', [AttendanceController::class, 'endBreak'])->name('user.attendance.endBreak');
     Route::get('/attendance/list', [AttendanceController::class, 'list'])->name('user.attendance.list');
     Route::get('/attendance/{id}', [AttendanceController::class, 'attendanceDetail'])->name('user.attendance.detail');
     Route::get('/stamp_correction_request/list', [AttendanceController::class, 'requestList'])->name('user.request.list');

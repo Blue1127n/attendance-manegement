@@ -2,13 +2,13 @@
     background-color: rgba(240, 239, 242, 1);
     width: 100%;
     max-width: 1512px;
-    margin: 0 auto;
-    padding: 20px;
 }
 
 .index-container {
     background-color: rgba(240, 239, 242, 1);
     text-align: center;
+    width: 100%;
+    max-width: 1512px;
     padding: 30px;
     font-family: Inter;
 }
@@ -16,11 +16,15 @@
 .status-labels {
     display: flex;
     justify-content: center;
+    align-items: center;
     gap: 20px;
     margin-bottom: 20px;
 }
 
 .status-label {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: 100px;
     height: 40px;
     padding: 5px 10px;

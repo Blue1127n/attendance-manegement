@@ -10,11 +10,16 @@
 <div class="container">
     <div class="index-container">
         <div class="status-labels">
-            <span class="status-label {{ $attendance->status === '勤務外' ? 'active' : '' }}">勤務外</span>
-            <span class="status-label {{ $attendance->status === '出勤中' ? 'active' : '' }}">出勤中</span>
-            <span class="status-label {{ $attendance->status === '休憩中' ? 'active' : '' }}">休憩中</span>
-            <span class="status-label {{ $attendance->status === '退勤済' ? 'active' : '' }}">退勤済</span>
-        </div>
+        @if ($attendance->status === '勤務外')
+            <span class="status-label active">勤務外</span>
+        @elseif ($attendance->status === '出勤中')
+            <span class="status-label active">出勤中</span>
+        @elseif ($attendance->status === '休憩中')
+            <span class="status-label active">休憩中</span>
+        @elseif ($attendance->status === '退勤済')
+            <span class="status-label active">退勤済</span>
+        @endif
+    </div>
 
         <h2>{{ now()->format('Y年m月d日 (D)') }}</h2>
 
