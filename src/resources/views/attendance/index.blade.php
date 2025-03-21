@@ -7,7 +7,7 @@
 @endpush
 
 @section('content')
-<div class="container">
+
     <div class="index-container">
         <div class="status-labels">
         @if ($attendance->status === '勤務外')
@@ -21,9 +21,9 @@
         @endif
     </div>
 
-        <h2>{{ now()->format('Y年m月d日 (D)') }}</h2>
+        <h1>{{ now()->translatedFormat('Y年n月j日 (D)') }}</h1>
 
-        <h1>{{ now()->format('H:i') }}</h1>
+        <h2>{{ now()->format('H:i') }}</h2>
 
         @if ($attendance->status === '勤務外')
             <form action="{{ route('user.attendance.clockIn') }}" method="POST">
@@ -51,5 +51,5 @@
             <p>お疲れ様でした。</p>
         @endif
     </div>
-</div>
+
 @endsection
