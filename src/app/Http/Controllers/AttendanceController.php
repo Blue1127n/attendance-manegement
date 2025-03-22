@@ -76,6 +76,12 @@ class AttendanceController extends Controller
         return redirect()->route('user.attendance')->with('error', 'すでに休憩中です');
     }
 
+    // 休憩開始記録を作成する
+    $attendance->breaks()->create([
+        'break_start' => now(),
+    ]);
+
+    // ステータス更新する
     $attendance->update(['status' => '休憩中']);
 
     return redirect()->route('user.attendance');
@@ -94,6 +100,14 @@ class AttendanceController extends Controller
         return redirect()->route('user.attendance')->with('error', '休憩していないため戻ることができません');
     }
 
+    // 最後の休憩データに終了時間を記録する
+    $lastBreak = $attendance->breaks()->whereNull('break_end')->latest()->first();
+
+    if ($lastBreak) {
+        $lastBreak->update(['break_end' => now()]);
+    }
+
+    // ステータス更新する
     $attendance->update(['status' => '出勤中']);
 
     return redirect()->route('user.attendance');

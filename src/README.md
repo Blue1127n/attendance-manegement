@@ -17,10 +17,10 @@
   3.DockerDesktopアプリを立ち上げる  
 
     `docker-compose up -d --build`  
+    `code .`  
 
 
 **Laravel環境構築**  
-
 
   1.PHPコンテナ内にログイン  
 
@@ -58,7 +58,42 @@
     `php artisan db:seed`  
 
 
-## MailHog  
+**MailHog環境構築**  
+
+  1.docker-compose.ymlに追加  
+
+    ``` text  
+    services:
+      mailhog:
+        image: mailhog/mailhog
+        ports:
+          - "1025:1025"
+          - "8025:8025"
+    ```  
+
+  2.MailHogのセットアップ  
+
+    `docker-compose up -d mailhog`  
+
+  3.「.env」の設定  
+
+    ``` text  
+    MAIL_MAILER=smtp
+    MAIL_HOST=mailhog
+    MAIL_PORT=1025
+    MAIL_USERNAME=null
+    MAIL_PASSWORD=null
+    MAIL_ENCRYPTION=null
+    MAIL_FROM_ADDRESS="noreply@example.com"
+    MAIL_FROM_NAME="勤怠管理"
+    ```  
+
+  4.キャッシュクリア  
+
+    `php artisan config:clear`  
+    `php artisan cache:clear`  
+    `php artisan serve`  
+    `docker-compose restart
 
 - http://localhost:8025/
 
