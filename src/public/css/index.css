@@ -79,3 +79,30 @@ h2 {
     margin-bottom: 260px;
 }
 
+.btn-warning {
+    background: rgba(255, 255, 255, 1);
+    color: rgba(0, 0, 0, 1);
+}
+
+.btn-success {
+    background: rgba(255, 255, 255, 1);
+    color: rgba(0, 0, 0, 1);
+}
+
+.button-group {
+    display: flex;
+    justify-content: center;
+    gap: 80px;
+    margin-bottom: 260px;
+}
+
+p {
+    font-weight: 700;
+    font-size: 26px;
+    line-height: 100%;
+    letter-spacing: 15%;
+    text-align: center;
+    color: rgba(0, 0, 0, 1);
+}
+
+

@@ -32,6 +32,11 @@ class AttendanceController extends Controller
     public function clockIn()
 {
     $user = Auth::user();
+
+    if (!$user) {
+        return redirect()->route('login')->with('error', 'ログインしてください');
+    }
+
     $today = Carbon::today()->toDateString();
 
     // すでに出勤している場合は処理しない
@@ -40,13 +45,15 @@ class AttendanceController extends Controller
                             ->first();
 
     if ($attendance && $attendance->clock_in) {
-        return redirect()->route('user.attendance')->with('error', '既に出勤済みです。');
+        return redirect()->route('user.attendance')->with('error', '既に出勤済みです');
     }
 
     // 初回出勤記録を作成
     Attendance::create([
-        ['user_id' => $user->id, 'date' => $today],
-        ['clock_in' => now(), 'status' => '出勤中']
+        'user_id' => $user->id,
+        'date' => $today,
+        'clock_in' => now(),
+        'status' => '出勤中',
     ]);
 
     return redirect()->route('user.attendance');
@@ -62,11 +69,11 @@ class AttendanceController extends Controller
                             ->first();
 
     if (!$attendance || $attendance->status !== '出勤中') {
-        return redirect()->route('user.attendance')->with('error', '出勤していないため休憩できません。');
+        return redirect()->route('user.attendance')->with('error', '出勤していないため休憩できません');
     }
 
     if ($attendance->status === '休憩中') {
-        return redirect()->route('user.attendance')->with('error', 'すでに休憩中です。');
+        return redirect()->route('user.attendance')->with('error', 'すでに休憩中です');
     }
 
     $attendance->update(['status' => '休憩中']);
@@ -84,7 +91,7 @@ class AttendanceController extends Controller
                             ->first();
 
     if (!$attendance || $attendance->status !== '休憩中') {
-        return redirect()->route('user.attendance')->with('error', '休憩していないため戻ることができません。');
+        return redirect()->route('user.attendance')->with('error', '休憩していないため戻ることができません');
     }
 
     $attendance->update(['status' => '出勤中']);
@@ -103,11 +110,11 @@ class AttendanceController extends Controller
 
     // もし出勤記録がなかったらエラーメッセージを返す
     if (!$attendance || !$attendance->clock_in) {
-        return redirect()->route('user.attendance')->with('error', '出勤していないため退勤できません。');
+        return redirect()->route('user.attendance')->with('error', '出勤していないため退勤できません');
     }
 
     if ($attendance->status === '退勤済') {
-        return redirect()->route('user.attendance')->with('error', 'すでに退勤済みです。');
+        return redirect()->route('user.attendance')->with('error', 'すでに退勤済みです');
     }
 
     $attendance->update([

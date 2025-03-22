@@ -32,14 +32,16 @@
             </form>
 
         @elseif ($attendance->status === '出勤中')
-            <form action="{{ route('user.attendance.clockOut') }}" method="POST">
-                @csrf
-                <button type="submit" class="btn btn-danger">退勤</button>
-            </form>
-            <form action="{{ route('user.attendance.startBreak') }}" method="POST">
-                @csrf
-                <button type="submit" class="btn btn-warning">休憩入</button>
-            </form>
+            <div class="button-group">
+                <form action="{{ route('user.attendance.clockOut') }}" method="POST">
+                    @csrf
+                    <button type="submit" class="btn btn-danger">退勤</button>
+                </form>
+                <form action="{{ route('user.attendance.startBreak') }}" method="POST">
+                    @csrf
+                    <button type="submit" class="btn btn-warning">休憩入</button>
+                </form>
+            </div>
 
         @elseif ($attendance->status === '休憩中')
             <form action="{{ route('user.attendance.endBreak') }}" method="POST">
