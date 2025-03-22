@@ -7,7 +7,6 @@
 @endpush
 
 @section('content')
-
     <div class="index-container">
         <div class="status-labels">
         @if ($attendance->status === '勤務外')
@@ -53,5 +52,4 @@
             <p>お疲れ様でした。</p>
         @endif
     </div>
-
 @endsection

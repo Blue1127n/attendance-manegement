@@ -1,0 +1,92 @@
+.container {
+    background-color: rgba(240, 239, 242, 1);
+    width: 100%;
+    max-width: 1512px;
+    margin: 0 auto;
+}
+
+.attendance-list-container {
+    background-color: rgba(240, 239, 242, 1);
+    width: 100%;
+    max-width: 1512px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    font-family: Inter;
+}
+
+.title {
+    display: flex;
+    align-items: center;
+    font-weight: 700;
+    font-size: 30px;
+    line-height: 100%;
+    letter-spacing: 0%;
+    color: rgba(0, 0, 0, 1);
+    margin-bottom: 20px;
+}
+
+.vertical-line {
+    display: inline-block;
+    height: 40px;
+    border: 8px solid rgba(0, 0, 0, 1);
+    margin-right: 20px;
+    background-color: rgba(0, 0, 0, 1);
+}
+
+.month-navigation {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 60px;
+    margin-bottom: 30px;
+}
+
+.month-navigation .nav-button button {
+    background: none;
+    border: none;
+    width: 20px;
+    height: 15px;
+    cursor: pointer;
+}
+
+.current-month {
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 100%;
+    letter-spacing: 0%;
+    color: rgba(0, 0, 0, 1);
+}
+
+.calendar-icon {
+    width: 25px;
+    height: 25px;
+    vertical-align: middle;
+    margin-right: 8px;
+}
+
+
+.attendance-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.attendance-table th,
+.attendance-table td {
+    padding: 14px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
+
+.attendance-table th {
+    background-color: #f8f8f8;
+    font-weight: bold;
+}
+
+.attendance-table td a {
+    color: #000;
+    font-weight: bold;
+    text-decoration: none;
+}

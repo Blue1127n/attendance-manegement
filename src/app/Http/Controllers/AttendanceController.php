@@ -11,22 +11,22 @@ class AttendanceController extends Controller
 {
     public function index()
 {
-        $user = Auth::user();
-        $today = Carbon::today()->toDateString();
+    $user = Auth::user();
+    $today = Carbon::today()->toDateString();
 
-        // 今日の勤怠データを取得（なければnull）
-        $attendance = Attendance::where('user_id', $user->id)
-                                ->where('date', $today)
-                                ->first();
+    // 今日の勤怠データを取得（なければnull）
+    $attendance = Attendance::where('user_id', $user->id)
+                            ->where('date', $today)
+                            ->first();
 
-        // 勤怠データがない場合は「勤務外」とする
-        if (!$attendance) {
-            $attendance = (object) [
-                'status' => '勤務外'
-        ];
+    // 勤怠データがない場合は「勤務外」とする
+    if (!$attendance) {
+        $attendance = (object) [
+            'status' => '勤務外'
+    ];
     }
 
-        return view('attendance.index', compact('attendance'));
+    return view('attendance.index', compact('attendance'));
 }
 
     public function clockIn()
@@ -139,4 +139,29 @@ class AttendanceController extends Controller
     return redirect()->route('user.attendance');
 }
 
+    public function list(Request $request)
+{
+    $user = Auth::user();
+
+    // 月指定があれば使い、なければ今月を使う
+    $month = $request->input('month')
+        ? Carbon::parse($request->input('month'))
+        : Carbon::now();
+
+    $startOfMonth = $month->copy()->startOfMonth()->toDateString(); //$month の月の 最初の日を取得
+    $endOfMonth = $month->copy()->endOfMonth()->toDateString(); //$month の月の 最後の日を取得
+
+    $attendances = Attendance::with('breaks') //指定された月の間にある 自分の勤怠情報を breaks 関係も一緒に取得
+        ->where('user_id', $user->id)
+        ->whereBetween('date', [$startOfMonth, $endOfMonth])
+        ->orderBy('date', 'asc')
+        ->get();
+
+    return view('attendance.list', [
+        'attendances' => $attendances, //勤怠データ
+        'currentMonth' => $month, //現在表示している月
+        'prevMonth' => $month->copy()->subMonth()->format('Y-m'), //前月の年月（例：2024-10）
+        'nextMonth' => $month->copy()->addMonth()->format('Y-m'), //翌月の年月（例：2024-12）
+    ]);
+}
 }
