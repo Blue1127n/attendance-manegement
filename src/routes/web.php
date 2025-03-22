@@ -1,12 +1,16 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\AdminController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Laravel\Fortify\Fortify;
+use App\Http\Requests\LoginRequest;
+use App\Http\Requests\RegisterRequest;
+use App\Models\User;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -29,6 +33,31 @@ Route::middleware('auth')->post('/logout', function (Request $request) {
     $request->session()->regenerateToken();
     return redirect('/login');
 })->name('logout');
+
+// ログイン処理（Fortifyではなく自作ルートでフォームリクエストを使う）
+Route::post('/login', function (LoginRequest $request) {
+    if (!Auth::attempt($request->only('email', 'password'), $request->boolean('remember'))) {
+        return back()->withErrors(['email' => 'ログイン情報が登録されていません'])->withInput();
+    }
+    $request->session()->regenerate();
+    return redirect()->intended('/attendance');
+});
+
+// 会員登録処理（Fortifyではなく自作ルートでフォームリクエストを使う）
+Route::post('/register', function (RegisterRequest $request) {
+    User::create([
+        'name' => $request->name,
+        'email' => $request->email,
+        'password' => Hash::make($request->password),
+    ]);
+
+    return redirect('/email/verify');
+});
+
+// メール認証画面
+Route::get('/email/verify', function () {
+    return view('auth.verify-email');
+})->middleware('auth')->name('verification.notice');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/attendance', [AttendanceController::class, 'index'])->name('user.attendance');

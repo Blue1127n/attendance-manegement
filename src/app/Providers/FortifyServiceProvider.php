@@ -54,15 +54,15 @@ class FortifyServiceProvider extends ServiceProvider
             return view('auth.verify-email');
         });
 
-        Fortify::authenticateUsing(function ($request) {
-            $user = User::where('email', $request->email)->first();
+        //Fortify::authenticateUsing(function ($request) {
+            //$user = User::where('email', $request->email)->first();
 
-            if ($user && Hash::check($request->password, $user->password)) {
-                return $user->hasVerifiedEmail() ? $user : null;
-            }
+            //if ($user && Hash::check($request->password, $user->password)) {
+                //return $user->hasVerifiedEmail() ? $user : null;
+            //}
 
-            return null;
-        });
+            //return null;
+        //});
 
         RateLimiter::for('login', function (Request $request) {
             $throttleKey = Str::transliterate(Str::lower($request->input(Fortify::username())).'|'.$request->ip());

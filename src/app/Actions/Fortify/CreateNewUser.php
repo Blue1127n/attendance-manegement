@@ -5,8 +5,10 @@ namespace App\Actions\Fortify;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\App;
 use Illuminate\Validation\Rule;
 use Laravel\Fortify\Contracts\CreatesNewUsers;
+use App\Http\Requests\RegisterRequest;
 
 class CreateNewUser implements CreatesNewUsers
 {
@@ -18,32 +20,19 @@ class CreateNewUser implements CreatesNewUsers
      */
     public function create(array $input): User
     {
-        $messages = [
-            'name.required' => 'お名前を入力してください',
-            'email.required' => 'メールアドレスを入力してください',
-            'email.email' => 'メールアドレスの形式が正しくありません',
-            'email.unique' => 'このメールアドレスは既に使用されています',
-            'password.required' => 'パスワードを入力してください',
-            'password.min' => 'パスワードは8文字以上で入力してください',
-            'password.confirmed' => 'パスワードと一致しません',
-        ];
+    // RegisterRequest のバリデーションルールとメッセージを使う
+    $request = App::make(RegisterRequest::class);
+    $request->merge($input);
+    $request->validateResolved();  // フォームリクエストのバリデーションを強制実行
 
-        $validated = Validator::make($input, [
-            'name' => ['required', 'string', 'max:255'],
-            'email' => [
-                'required',
-                'string',
-                'email',
-                'max:255',
-                Rule::unique(User::class),
-            ],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-        ], $messages)->validate();
+    return User::create([
+        'name' => $input['name'],
+        'email' => $input['email'],
+        'password' => Hash::make($input['password']),
+    ]);
 
-        return User::create([
-            'name' => $input['name'],
-            'email' => $input['email'],
-            'password' => Hash::make($input['password']),
-        ]);
+    $user->sendEmailVerificationNotification(); //会員登録後に自動で認証メールが送られる
+
+    return $user;
     }
 }

@@ -18,7 +18,7 @@ class RouteServiceProvider extends ServiceProvider
      *
      * @var string
      */
-    public const HOME = '/email/verify';
+    public const HOME = '/email/verify'; //初回リダイレクト先がHOMEなので、これで登録後に遷移する場所を記述する
 
     /**
      * The controller namespace for the application.
