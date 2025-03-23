@@ -15,43 +15,49 @@
     <div class="month-navigation">
         <form action="{{ route('user.attendance.list') }}" method="GET" class="nav-button">
             <input type="hidden" name="month" value="{{ $prevMonth }}">
-            <button type="submit">← 前月</button>
+            <button type="submit" class="month-button">
+                <img src="{{ asset('images/left-arrow.png') }}" alt="前月" class="arrow-icon">
+                <span class="month-label">前月</span>
+            </button>
         </form>
 
         <div class="current-month">
             <img src="{{ asset('images/calendar.png') }}" alt="カレンダーアイコン" class="calendar-icon">
-            {{ $currentMonth->format('Y/m') }}
+            <span>{{ $currentMonth->format('Y/m') }}</span>
         </div>
 
         <form action="{{ route('user.attendance.list') }}" method="GET" class="nav-button">
             <input type="hidden" name="month" value="{{ $nextMonth }}">
-            <button type="submit">翌月 →</button>
+            <button type="submit" class="month-button">
+                <span class="month-label">翌月</span>
+                <img src="{{ asset('images/right-arrow.png') }}" alt="翌月" class="arrow-icon">
+
+            </button>
         </form>
     </div>
 
-    <table class="attendance-table">
-        <thead>
-            <tr>
-                <th>日付</th>
-                <th>出勤</th>
-                <th>退勤</th>
-                <th>休憩</th>
-                <th>合計</th>
-                <th>詳細</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($attendances as $attendance)
-                <tr>
-                    <td>{{ \Carbon\Carbon::parse($attendance->date)->format('m/d(D)') }}</td>
-                    <td>{{ $attendance->start_time ?? '' }}</td>
-                    <td>{{ $attendance->end_time ?? '' }}</td>
-                    <td>{{ $attendance->break_time ?? '' }}</td>
-                    <td>{{ $attendance->total_time ?? '' }}</td>
-                    <td><a href="{{ route('user.attendance.detail', $attendance->id) }}">詳細</a></td>
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
+    <div class="attendance-header">
+        <div class="row">
+            <div>日付</div>
+            <div>出勤</div>
+            <div>退勤</div>
+            <div>休憩</div>
+            <div>合計</div>
+            <div>詳細</div>
+        </div>
+    </div>
+
+    <div class="attendance-body">
+        @foreach ($attendances as $attendance)
+            <div class="row">
+                <div>{{ \Carbon\Carbon::parse($attendance->date)->format('m/d(D)') }}</div>
+                <div>{{ $attendance->start_time ?? '' }}</div>
+                <div>{{ $attendance->end_time ?? '' }}</div>
+                <div>{{ $attendance->break_time ?? '' }}</div>
+                <div>{{ $attendance->total_time ?? '' }}</div>
+                <div><a href="{{ route('user.attendance.detail', $attendance->id) }}" class="detail-link">詳細</a></div>
+            </div>
+        @endforeach
+    </div>
 </div>
 @endsection
