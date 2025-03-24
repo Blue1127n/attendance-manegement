@@ -16,15 +16,23 @@ class AttendancesTableSeeder extends Seeder
      */
     public function run()
     {
-        $user = User::first();
+        $user = User::where('email', 'user@example.com')->first();
 
-        Attendance::create([
-            'user_id' => $user->id,
-            'date' => Carbon::today()->toDateString(),
-            'clock_in' => '09:00:00',
-            'clock_out' => '18:00:00',
-            'status' => '退勤済',
-            'remarks' => 'テストデータ',
-        ]);
+        $months = [1, 2, 3];
+
+        foreach ($months as $month) {
+            for ($i = 1; $i <= 16; $i++) {
+                $date = Carbon::create(2025, $month, $i);
+
+                Attendance::create([
+                    'user_id' => $user->id,
+                    'date' => $date->toDateString(),
+                    'clock_in' => '09:00:00',
+                    'clock_out' => '18:00:00',
+                    'status' => '退勤済',
+                    'remarks' => 'テストデータ（' . $month . '月' . $i . '日）',
+                ]);
+            }
+        }
     }
 }
