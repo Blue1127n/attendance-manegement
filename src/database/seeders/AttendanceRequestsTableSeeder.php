@@ -3,10 +3,10 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-
 use App\Models\AttendanceRequest;
 use App\Models\User;
 use App\Models\Attendance;
+use Illuminate\Support\Arr;
 
 class AttendanceRequestsTableSeeder extends Seeder
 {
@@ -17,18 +17,30 @@ class AttendanceRequestsTableSeeder extends Seeder
      */
     public function run()
     {
-        $user = User::first();
-        $attendance = Attendance::first();
+        // 一般ユーザーのみ（admin@example.com 以外）
+        $users = User::where('email', '!=', 'admin@example.com')->get();
 
-        AttendanceRequest::create([
-            'user_id' => $user->id,
-            'attendance_id' => $attendance->id,
-            'requested_clock_in' => '09:15:00',
-            'requested_clock_out' => '18:15:00',
-            'requested_break_start' => '12:00:00',
-            'requested_break_end' => '12:45:00',
-            'remarks' => '出勤時間を15分修正',
-            'status' => '承認待ち',
-        ]);
+        foreach ($users as $user) {
+            // 1〜3月分でランダムに2〜3件申請
+            $attendances = Attendance::where('user_id', $user->id)
+                ->whereIn(\DB::raw('MONTH(date)'), [1, 2, 3])
+                ->inRandomOrder()
+                ->take(rand(2, 3))
+                ->get();
+
+            foreach ($attendances as $attendance) {
+                // 申請内容：15分ずらして、休憩も変えてみる
+                AttendanceRequest::create([
+                    'user_id' => $user->id,
+                    'attendance_id' => $attendance->id,
+                    'requested_clock_in' => \Carbon\Carbon::parse($attendance->clock_in)->addMinutes(15)->format('H:i:s'),
+                    'requested_clock_out' => \Carbon\Carbon::parse($attendance->clock_out)->addMinutes(15)->format('H:i:s'),
+                    'requested_break_start' => '12:00:00',
+                    'requested_break_end' => '12:45:00',
+                    'remarks' => '出退勤時間と休憩時間の調整',
+                    'status' => Arr::random(['承認待ち', '承認済み', '却下']),
+                ]);
+            }
+        }
     }
 }

@@ -8,9 +8,7 @@
 
 @section('content')
 <div class="attendance-list-container">
-    <h1 class="title">
-        <span class="vertical-line"></span>
-        勤怠一覧</h1>
+    <h1 class="title"><span class="vertical-line"></span>勤怠一覧</h1>
 
     <div class="month-navigation">
         <form action="{{ route('user.attendance.list') }}" method="GET" class="nav-button">
@@ -50,7 +48,7 @@
     <div class="attendance-body">
         @foreach ($attendances as $attendance)
             <div class="row">
-                <div>{{ \Carbon\Carbon::parse($attendance->date)->format('m/d(D)') }}</div>
+                <div>{{ \Carbon\Carbon::parse($attendance->date)->translatedFormat('m/d(D)') }}</div>
                 <div>{{ $attendance->start_time ?? '' }}</div>
                 <div>{{ $attendance->end_time ?? '' }}</div>
                 <div>{{ $attendance->break_time ?? '' }}</div>

@@ -196,4 +196,14 @@ class AttendanceController extends Controller
         'nextMonth' => $month->copy()->addMonth()->format('Y-m'), //翌月の年月（例：2024-12）
     ]);
 }
+
+    public function attendanceDetail($id)
+{
+    $attendance = Attendance::with(['user', 'breaks'])
+                    ->where('user_id', Auth::id()) // 自分のデータだけ取得
+                    ->findOrFail($id);
+
+    return view('attendance.detail', compact('attendance'));
+}
+
 }
