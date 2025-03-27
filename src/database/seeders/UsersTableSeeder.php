@@ -17,42 +17,48 @@ class UsersTableSeeder extends Seeder
     public function run()
     {
         User::create([
-            'name' => '管理者ユーザー',
+            'last_name' => '管理者',
+            'first_name' => 'ユーザー',
             'email' => 'admin@example.com',
             'password' => Hash::make('password123'),
             'email_verified_at' => Carbon::now(),
         ]);
 
         User::create([
-            'name' => '一般ユーザー1',
+            'last_name' => '一般',
+            'first_name' => 'ユーザー1',
             'email' => 'user1@example.com',
             'password' => Hash::make('password234'),
             'email_verified_at' => Carbon::now(),
         ]);
 
         User::create([
-            'name' => '一般ユーザー2',
+            'last_name' => '一般',
+            'first_name' => 'ユーザー2',
             'email' => 'user2@example.com',
             'password' => Hash::make('password345'),
             'email_verified_at' => Carbon::now(),
         ]);
 
         User::create([
-            'name' => '一般ユーザー3',
+            'last_name' => '一般',
+            'first_name' => 'ユーザー3',
             'email' => 'user3@example.com',
             'password' => Hash::make('password456'),
             'email_verified_at' => Carbon::now(),
         ]);
 
         User::create([
-            'name' => '一般ユーザー4',
+            'last_name' => '一般',
+            'first_name' => 'ユーザー4',
             'email' => 'user4@example.com',
             'password' => Hash::make('password567'),
             'email_verified_at' => Carbon::now(),
         ]);
 
         User::create([
-            'name' => '一般ユーザー5',
+            'last_name' => '一般',
+            'first_name' => 'ユーザー5',
             'email' => 'user5@example.com',
             'password' => Hash::make('password678'),
             'email_verified_at' => Carbon::now(),

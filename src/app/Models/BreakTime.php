@@ -24,17 +24,17 @@ class BreakTime extends Model
     ];
 
     public function getBreakStartAttribute($value)
-    {
+{
         return $value ? Carbon::parse($value)->format('H:i') : null; // 休憩開始時間を "HH:MM" 形式で取得するために記述
-    }
+}
 
     public function getBreakEndAttribute($value)
-    {
+{
         return $value ? Carbon::parse($value)->format('H:i') : null;
-    }
+}
 
     public function attendance()
-    {
+{
         return $this->belongsTo(Attendance::class);
-    }
+}
 }

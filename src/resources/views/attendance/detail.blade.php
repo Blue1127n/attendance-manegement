@@ -13,7 +13,7 @@
     <div class="detail-card">
         <div class="row">
             <div class="label">名前</div>
-            <div class="value">{{ $attendance->user->name }}</div>
+            <div class="value">{{ $attendance->user->last_name }} {{ $attendance->user->first_name }}</div>
         </div>
         <div class="row">
             <div class="label">日付</div>

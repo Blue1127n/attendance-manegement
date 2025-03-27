@@ -24,7 +24,17 @@ class RegisterRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => ['required', 'string', 'max:255'],
+            'name' => [
+            'required',
+            'string',
+            'max:255',
+            function ($attribute, $value, $fail) {
+                // 半角・全角スペースのどちらかが含まれているかチェック
+                if (count(preg_split('/\s+/u', trim($value))) < 2) { //preg_split('/\s+/u', trim($value))スペース（全角/半角）で分割
+                    $fail('姓と名の間にスペースを入れて入力してください');
+                }
+            },
+        ],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ];

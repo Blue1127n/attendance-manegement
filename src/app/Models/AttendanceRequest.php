@@ -26,32 +26,32 @@ class AttendanceRequest extends Model
     ];
 
     public function getRequestedClockInAttribute($value)
-    {
+{
         return $value ? Carbon::parse($value)->format('H:i') : null;
-    }
+}
 
     public function getRequestedClockOutAttribute($value)
-    {
+{
         return $value ? Carbon::parse($value)->format('H:i') : null;
-    }
+}
 
     public function getRequestedBreakStartAttribute($value)
-    {
+{
         return $value ? Carbon::parse($value)->format('H:i') : null;
-    }
+}
 
     public function getRequestedBreakEndAttribute($value)
-    {
+{
         return $value ? Carbon::parse($value)->format('H:i') : null;
-    }
+}
 
     public function user()
-    {
+{
         return $this->belongsTo(User::class);
-    }
+}
 
     public function attendance()
-    {
+{
         return $this->belongsTo(Attendance::class);
-    }
+}
 }

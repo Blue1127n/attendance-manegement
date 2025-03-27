@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\AdminController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
@@ -45,11 +46,29 @@ Route::post('/login', function (LoginRequest $request) {
 
 // 会員登録処理（Fortifyではなく自作ルートでフォームリクエストを使う）
 Route::post('/register', function (RegisterRequest $request) {
-    User::create([
-        'name' => $request->name,
+    // フルネーム（姓＋名）を分割する
+    $nameParts = preg_split('/\s+/u', trim($request->name));
+    $lastName = $nameParts[0] ?? '';
+    $firstName = $nameParts[1] ?? '';
+
+    Log::info('【名前分割】', [
+        '元の名前' => $request->name,
+        '姓' => $lastName,
+        '名' => $firstName,
+    ]);
+
+    // ユーザー作成（last_name と first_name に分けて保存）
+    $user = User::create([
+        'last_name' => $lastName,
+        'first_name' => $firstName,
         'email' => $request->email,
         'password' => Hash::make($request->password),
     ]);
+
+    Auth::login($user);
+
+    // メール認証通知
+    $user->sendEmailVerificationNotification();
 
     return redirect('/email/verify');
 });

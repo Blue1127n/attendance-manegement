@@ -19,20 +19,34 @@ class CreateNewUser implements CreatesNewUsers
      * @param  array<string, string>  $input
      */
     public function create(array $input): User
-    {
+{
     // RegisterRequest のバリデーションルールとメッセージを使う
     $request = App::make(RegisterRequest::class);
     $request->merge($input);
     $request->validateResolved();  // フォームリクエストのバリデーションを強制実行
 
-    return User::create([
-        'name' => $input['name'],
+    // name を姓と名に分割
+    $nameParts = preg_split('/\s+/u', trim($input['name']));
+    $lastName = $nameParts[0] ?? '';
+    $firstName = $nameParts[1] ?? '';
+
+    // ログ出力（デバッグ用）
+    \Log::info('【名前分割結果】', [
+        '入力値' => $input['name'],
+        'last_name' => $lastName,
+        'first_name' => $firstName,
+    ]);
+
+    // 登録処理
+    $user = User::create([
+        'last_name' => $lastName,
+        'first_name' => $firstName,
         'email' => $input['email'],
         'password' => Hash::make($input['password']),
     ]);
 
-    $user->sendEmailVerificationNotification(); //会員登録後に自動で認証メールが送られる
+    $user->sendEmailVerificationNotification(); // 認証メール送信
 
     return $user;
-    }
+}
 }
