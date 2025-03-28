@@ -17,13 +17,17 @@
         </div>
         <div class="row">
             <div class="label">日付</div>
-            <div class="value">{{ \Carbon\Carbon::parse($attendance->date)->format('Y年n月j日') }}</div>
+            <div class="value">
+                <span class="year">{{ \Carbon\Carbon::parse($attendance->date)->format('Y年') }}</span>
+                <span class="month-day">{{ \Carbon\Carbon::parse($attendance->date)->format('n月j日') }}</span>
+            </div>
         </div>
         <div class="row">
             <div class="label">出勤・退勤</div>
             <div class="value">
-                {{ \Carbon\Carbon::parse($attendance->clock_in)->format('H:i') ?? '-' }} 〜
-                {{ \Carbon\Carbon::parse($attendance->clock_out)->format('H:i') ?? '-' }}
+                <input type="time" name="clock_in" value="{{ old('clock_in', \Carbon\Carbon::parse($attendance->clock_in)->format('H:i')) }}">
+                〜
+                <input type="time" name="clock_out" value="{{ old('clock_out', \Carbon\Carbon::parse($attendance->clock_out)->format('H:i')) }}">
             </div>
         </div>
         @foreach ($attendance->breaks as $break)

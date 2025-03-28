@@ -1,35 +1,49 @@
-.attendance-detail-container {
-    width: 600px;
+.container {
+    background-color: rgba(240, 239, 242, 1);
+    width: 100%;
+    max-width: 1512px;
     margin: 0 auto;
-    background-color: #fff;
-    padding: 32px;
-    border-radius: 12px;
+}
+
+.attendance-detail-container {
+    width: 100%;
+    max-width: 900px;
+    background-color: rgba(240, 239, 242, 1);
+    font-family: 'Inter', sans-serif;
 }
 
 .title {
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 24px;
     display: flex;
     align-items: center;
+    font-weight: 700;
+    font-size: 30px;
+    line-height: 1;
+    color: rgba(0, 0, 0, 1);
+    margin-bottom: 30px;
+    margin-top: 95px;
 }
 
 .vertical-line {
-    width: 6px;
-    height: 24px;
-    background-color: black;
-    margin-right: 10px;
+    display: inline-block;
+    height: 40px;
+    border: 8px solid rgba(0, 0, 0, 1);
+    background-color: rgba(0, 0, 0, 1);
+    margin-right: 20px;
 }
 
 .detail-card {
-    border: 1px solid #ddd;
-    border-radius: 8px;
+    width: 900px;
+    border-radius: 10px;
+    margin: 100px auto;
+    background-color: rgba(255, 255, 255, 1);
+    border: 1px solid rgba(225, 225, 225, 1);
     overflow: hidden;
 }
 
 .row {
     display: flex;
-    border-bottom: 1px solid #eee;
+    height: 88px;
+    border-bottom: 2px solid rgba(225, 225, 225, 1);
     padding: 12px 16px;
 }
 
@@ -38,13 +52,44 @@
 }
 
 .label {
-    width: 120px;
-    font-weight: bold;
-    color: #666;
+    width: 300px;
+    color: rgba(115, 115, 115, 1);
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 1;
+    letter-spacing: 0.15em;
+    padding-left: 65px;
+    padding-top: 30px;
+}
+
+.year {
+    margin-right: 100px;
 }
 
 .value {
     flex: 1;
+    width: 600px;
+    padding-top: 30px;
+}
+
+input[type="time"]::-webkit-calendar-picker-indicator {
+    display: none;
+    -webkit-appearance: none;
+}
+
+input[type="time"] {
+    width: 103px;
+    height: 29px;
+    border-radius: 4px;
+    border: 1px solid rgba(225, 225, 225, 1);
+    padding: 5px;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 1;
+    letter-spacing: 0.15em;
+    vertical-align: middle;
+    text-align: center;
+    color: rgba(0, 0, 0, 1);
 }
 
 .button-container {
@@ -54,9 +99,19 @@
 
 .correction-button {
     display: inline-block;
-    background-color: black;
-    color: white;
-    padding: 10px 24px;
-    border-radius: 6px;
+    width: 130px;
+    height: 50px;
+    border-radius: 5px;
+    padding: 15px 25px;
+    background: rgba(0, 0, 0, 1);
+    color: rgba(255, 255, 255, 1);
     text-decoration: none;
+    text-align: center;
+    font-weight: 700;
+    font-size: 22px;
+    line-height: 1;
+    letter-spacing: 0.15em;
 }
+
+
+
