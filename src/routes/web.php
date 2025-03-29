@@ -86,6 +86,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/attendance/end-break', [AttendanceController::class, 'endBreak'])->name('user.attendance.endBreak');
     Route::get('/attendance/list', [AttendanceController::class, 'list'])->name('user.attendance.list');
     Route::get('/attendance/{id}', [AttendanceController::class, 'attendanceDetail'])->name('user.attendance.detail');
+    Route::post('/attendance/{id}/correction', [AttendanceController::class, 'correctionRequest'])->name('user.attendance.correction');
     Route::get('/stamp_correction_request/list', [AttendanceController::class, 'requestList'])->name('user.request.list');
 });
 

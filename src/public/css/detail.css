@@ -42,7 +42,7 @@
 
 .row {
     display: flex;
-    height: 95px;
+    height: 100px;
     border-bottom: 2px solid rgba(225, 225, 225, 1);
     align-items: center;
 }
@@ -69,6 +69,11 @@
 .value {
     flex: 1;
     width: 550px;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 1;
+    letter-spacing: 0.15em;
+    color: rgba(0, 0, 0, 1);
 }
 
 .time-input::-webkit-calendar-picker-indicator {
@@ -93,7 +98,7 @@
 }
 
 .time-separator {
-    margin-right: 40px; /* ← 「〜」の右側にもスペースつけたい場合に */
+    margin-right: 40px;
 }
 
 .remarks-field {
@@ -101,6 +106,7 @@
     height: 72px;
     border-radius: 4px;
     border: 1px solid rgba(217, 217, 217, 1);
+    padding: 5px 5px;
 }
 
 .button-container {
@@ -124,5 +130,15 @@
     letter-spacing: 0.15em;
 }
 
+.approval-message {
+    text-align: center;
+    color: rgba(255, 85, 85, 1);
+    font-size: 14px;
+    margin-top: 20px;
+}
 
-
+.error {
+    color: rgba(255, 85, 85, 1);
+    font-size: 14px;
+    margin-top: 4px;
+}

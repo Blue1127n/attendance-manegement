@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Attendance;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Attendance;
+use App\Models\BreakTime;
+use App\Models\AttendanceRequest;
+use App\Http\Requests\AttendanceCorrectionRequest;
+use Carbon\Carbon;
 
 class AttendanceController extends Controller
 {
@@ -206,4 +209,41 @@ class AttendanceController extends Controller
     return view('attendance.detail', compact('attendance'));
 }
 
+    public function correctionRequest(AttendanceCorrectionRequest $request, $id)
+{
+    $attendance = Attendance::with('breaks')->where('user_id', Auth::id())->findOrFail($id);
+
+    // 修正申請を新たに作成（attendance_requests テーブルに保存）
+    AttendanceRequest::create([
+        'user_id' => Auth::id(),
+        'attendance_id' => $attendance->id,
+        'requested_clock_in' => $request->clock_in,
+        'requested_clock_out' => $request->clock_out,
+        'requested_break_start' => $request->breaks[0]['start'] ?? null, // 今は1枠だけ対応
+        'requested_break_end' => $request->breaks[0]['end'] ?? null,
+        'remarks' => trim($request->remarks),
+        'status' => '承認待ち',
+    ]);
+
+    return redirect()->route('user.request.list');
+}
+
+    public function requestList()
+{
+    $user = Auth::user();
+
+    $pending = AttendanceRequest::with(['user', 'attendance'])
+        ->where('user_id', $user->id)
+        ->where('status', '承認待ち')
+        ->orderBy('updated_at', 'desc')
+        ->get();
+
+    $approved = AttendanceRequest::with(['user', 'attendance'])
+        ->where('user_id', $user->id)
+        ->where('status', '承認済み')
+        ->orderBy('updated_at', 'desc')
+        ->get();
+
+    return view('attendance.request.list', compact('pending', 'approved'));
+}
 }
