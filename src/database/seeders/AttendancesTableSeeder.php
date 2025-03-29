@@ -34,7 +34,7 @@ class AttendancesTableSeeder extends Seeder
                         'clock_in' => '09:00:00',
                         'clock_out' => '18:00:00',
                         'status' => '退勤済',
-                        'remarks' => "{$user->name}：テストデータ（{$month}月{$day}日）",
+                        'remarks' => '',
                     ]);
                 }
             }
