@@ -200,14 +200,7 @@ class AttendanceController extends Controller
     ]);
 }
 
-    public function attendanceDetail($id)
-{
-    $attendance = Attendance::with(['user', 'breaks'])
-                    ->where('user_id', Auth::id()) // 自分のデータだけ取得
-                    ->findOrFail($id);
 
-    return view('attendance.detail', compact('attendance'));
-}
 
     public function correctionRequest(AttendanceCorrectionRequest $request, $id)
 {
@@ -246,4 +239,19 @@ class AttendanceController extends Controller
 
     return view('attendance.request.list', compact('pending', 'approved'));
 }
+
+    public function show($id)
+{
+    $attendance = Attendance::with(['user', 'breaks'])->findOrFail($id);
+
+    // ユーザーが出した「承認待ち」のリクエストを取得（あれば）
+    $request = AttendanceRequest::where('attendance_id', $id)
+        ->where('user_id', Auth::id())
+        ->where('status', '承認待ち')
+        ->latest()
+        ->first();
+
+    return view('attendance.detail', compact('attendance', 'request'));
+}
+
 }

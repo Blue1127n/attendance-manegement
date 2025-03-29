@@ -42,7 +42,7 @@
 
 .row {
     display: flex;
-    height: 100px;
+    height: 110px;
     border-bottom: 2px solid rgba(225, 225, 225, 1);
     align-items: center;
 }
@@ -130,11 +130,16 @@
     letter-spacing: 0.15em;
 }
 
+.approval-message-container {
+    margin-top: 10px;
+    margin-bottom: 30px;
+}
+
 .approval-message {
-    text-align: center;
+    text-align: right;
     color: rgba(255, 85, 85, 1);
     font-size: 14px;
-    margin-top: 20px;
+    margin-top: 5px;
 }
 
 .error {
@@ -142,3 +147,4 @@
     font-size: 14px;
     margin-top: 4px;
 }
+
