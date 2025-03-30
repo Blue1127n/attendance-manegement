@@ -35,8 +35,6 @@ class AttendanceRequestsTableSeeder extends Seeder
                     'attendance_id' => $attendance->id,
                     'requested_clock_in' => \Carbon\Carbon::parse($attendance->clock_in)->addMinutes(15)->format('H:i:s'),
                     'requested_clock_out' => \Carbon\Carbon::parse($attendance->clock_out)->addMinutes(15)->format('H:i:s'),
-                    'requested_break_start' => '12:00:00',
-                    'requested_break_end' => '12:45:00',
                     'remarks' => '出退勤時間と休憩時間の調整',
                     'status' => Arr::random(['承認待ち', '承認済み', '却下']),
                 ]);

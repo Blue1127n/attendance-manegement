@@ -206,17 +206,25 @@ class AttendanceController extends Controller
 {
     $attendance = Attendance::with('breaks')->where('user_id', Auth::id())->findOrFail($id);
 
-    // 修正申請を新たに作成（attendance_requests テーブルに保存）
-    AttendanceRequest::create([
+    // 修正申請（親）を作成
+    $attendanceRequest = AttendanceRequest::create([
         'user_id' => Auth::id(),
         'attendance_id' => $attendance->id,
         'requested_clock_in' => $request->clock_in,
         'requested_clock_out' => $request->clock_out,
-        'requested_break_start' => $request->breaks[0]['start'] ?? null, // 今は1枠だけ対応
-        'requested_break_end' => $request->breaks[0]['end'] ?? null,
         'remarks' => trim($request->remarks),
         'status' => '承認待ち',
     ]);
+
+    // 修正申請の休憩（子）を複数登録
+    foreach ($request->breaks as $break) {
+        if (!empty($break['start']) && !empty($break['end'])) {
+            $attendanceRequest->breaks()->create([
+                'requested_break_start' => $break['start'],
+                'requested_break_end' => $break['end'],
+            ]);
+        }
+    }
 
     return redirect()->route('user.request.list');
 }
@@ -244,14 +252,28 @@ class AttendanceController extends Controller
 {
     $attendance = Attendance::with(['user', 'breaks'])->findOrFail($id);
 
-    // ユーザーが出した「承認待ち」のリクエストを取得（あれば）
-    $request = AttendanceRequest::where('attendance_id', $id)
+    // 修正申請を取得
+    $request = AttendanceRequest::with('breaks') // ← ここポイント
+        ->where('attendance_id', $id)
         ->where('user_id', Auth::id())
         ->where('status', '承認待ち')
         ->latest()
         ->first();
 
+    if ($request) {
+        $attendance->clock_in = $request->requested_clock_in;
+        $attendance->clock_out = $request->requested_clock_out;
+        $attendance->remarks = $request->remarks;
+
+        // 修正申請に紐づく休憩をすべて上書き表示用に
+        $attendance->breaks = $request->breaks->map(function ($break) {
+            return (object)[
+                'break_start' => $break->requested_break_start,
+                'break_end' => $break->requested_break_end,
+            ];
+        });
+    }
+
     return view('attendance.detail', compact('attendance', 'request'));
 }
-
 }

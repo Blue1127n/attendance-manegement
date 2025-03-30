@@ -19,8 +19,6 @@ class CreateAttendanceRequestsTable extends Migration
             $table->foreignId('attendance_id')->constrained()->cascadeOnDelete();
             $table->time('requested_clock_in')->nullable();
             $table->time('requested_clock_out')->nullable();
-            $table->time('requested_break_start')->nullable();
-            $table->time('requested_break_end')->nullable();
             $table->text('remarks')->nullable();
             $table->enum('status', ['承認待ち', '承認済み', '却下']);
             $table->timestamps();
