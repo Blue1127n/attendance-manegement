@@ -21,8 +21,8 @@
             <div class="row">
                 <div class="label">日付</div>
                 <div class="value">
-                    <span class="year">{{ \Carbon\Carbon::parse($attendance->date)->format('Y年') }}</span>
-                    <span class="month-day">{{ \Carbon\Carbon::parse($attendance->date)->format('n月j日') }}</span>
+                        <span class="year-static">{{ \Carbon\Carbon::parse($attendance->date)->format('Y年') }}</span>
+                        <span class="month-day">{{ \Carbon\Carbon::parse($attendance->date)->format('n月j日') }}</span>
                 </div>
             </div>
             <div class="row">

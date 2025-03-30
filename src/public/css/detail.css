@@ -34,7 +34,7 @@
 .detail-card {
     width: 900px;
     border-radius: 10px;
-    margin: 100px auto;
+    margin: 100px auto 0;
     background-color: rgba(255, 255, 255, 1);
     border: 1px solid rgba(225, 225, 225, 1);
     overflow: hidden;
@@ -62,8 +62,13 @@
 }
 
 .year {
-    margin-right: 150px;
-    margin-left: 25px;
+    margin-right: 140px;
+    margin-left: 20px;
+}
+
+.year-static {
+    margin-right: 95px;
+    margin-left: 0;
 }
 
 .value {
@@ -94,11 +99,11 @@
     vertical-align: middle;
     text-align: center;
     color: rgba(0, 0, 0, 1);
-    margin-right: 40px;
 }
 
 .time-separator {
-    margin-right: 40px;
+    display: inline-block;
+    margin: 0 40px;
 }
 
 .remarks-field {
@@ -111,7 +116,7 @@
 
 .button-container {
     text-align: right;
-    margin-top: 20px;
+    margin-top: 90px;
 }
 
 .correction-button {
@@ -131,15 +136,15 @@
 }
 
 .approval-message-container {
-    margin-top: 10px;
-    margin-bottom: 30px;
+    max-width: 900px;
+    margin: 5px auto 0;
+    display: flex;
+    justify-content: flex-end;
 }
 
 .approval-message {
-    text-align: right;
     color: rgba(255, 85, 85, 1);
     font-size: 14px;
-    margin-top: 5px;
 }
 
 .error {

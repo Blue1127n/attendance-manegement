@@ -35,7 +35,7 @@
                         <td>{{ \Carbon\Carbon::parse($request->attendance->date)->format('Y/m/d') }}</td>
                         <td>{{ $request->remarks }}</td>
                         <td>{{ \Carbon\Carbon::parse($request->created_at)->format('Y/m/d') }}</td>
-                        <td><a href="{{ route('user.attendance.detail', $request->attendance_id) }}">詳細</a></td>
+                        <td><a href="{{ route('user.attendance.detail', $request->attendance_id) }}" class="detail-link">詳細</a></td>
                     </tr>
                 @endforeach
             </tbody>
@@ -62,10 +62,11 @@
                         <td>{{ \Carbon\Carbon::parse($request->attendance->date)->format('Y/m/d') }}</td>
                         <td>{{ $request->remarks }}</td>
                         <td>{{ \Carbon\Carbon::parse($request->created_at)->format('Y/m/d') }}</td>
-                        <td><a href="{{ route('user.attendance.detail', $request->attendance_id) }}">詳細</a></td>
+                        <td><a href="{{ route('user.attendance.detail', $request->attendance_id) }}" class="detail-link">詳細</a></td>
                     </tr>
                 @endforeach
             </tbody>
+        </table>
     </div>
 </div>
 
