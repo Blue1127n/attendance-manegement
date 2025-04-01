@@ -29,7 +29,6 @@
             <button type="submit" class="month-button">
                 <span class="month-label">翌月</span>
                 <img src="{{ asset('images/right-arrow.png') }}" alt="翌月" class="arrow-icon">
-
             </button>
         </form>
     </div>

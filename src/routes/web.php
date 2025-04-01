@@ -24,8 +24,9 @@ use App\Models\User;
 |
 */
 
+// 管理者ログイン画面(一般は不要)
 Route::get('/admin/login', function () {
-    return view('auth.admin-login');
+    return view('auth.admin.login');
 })->name('admin.login');
 
 Route::middleware('auth')->post('/logout', function (Request $request) {
@@ -35,13 +36,22 @@ Route::middleware('auth')->post('/logout', function (Request $request) {
     return redirect('/login');
 })->name('logout');
 
-// ログイン処理（Fortifyではなく自作ルートでフォームリクエストを使う）
+// ログイン処理（Fortifyではなく自作ルートでフォームリクエストを使う）一般ユーザー
 Route::post('/login', function (LoginRequest $request) {
     if (!Auth::attempt($request->only('email', 'password'), $request->boolean('remember'))) {
         return back()->withErrors(['email' => 'ログイン情報が登録されていません'])->withInput();
     }
     $request->session()->regenerate();
     return redirect()->intended('/attendance');
+});
+
+// ログイン処理（Fortifyではなく自作ルートでフォームリクエストを使う）管理者
+Route::post('/admin/login', function (AdminLoginRequest $request) {
+    if (!Auth::attempt($request->only('email', 'password'), $request->boolean('remember'))) {
+        return back()->withErrors(['email' => 'ログイン情報が登録されていません'])->withInput();
+    }
+    $request->session()->regenerate();
+    return redirect()->intended('/admin/attendance/list');
 });
 
 // 会員登録処理（Fortifyではなく自作ルートでフォームリクエストを使う）
@@ -85,7 +95,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/attendance/start-break', [AttendanceController::class, 'startBreak'])->name('user.attendance.startBreak');
     Route::post('/attendance/end-break', [AttendanceController::class, 'endBreak'])->name('user.attendance.endBreak');
     Route::get('/attendance/list', [AttendanceController::class, 'list'])->name('user.attendance.list');
-    
     Route::post('/attendance/{id}/correction', [AttendanceController::class, 'correctionRequest'])->name('user.attendance.correction');
     Route::get('/attendances/{id}/detail', [AttendanceController::class, 'show'])->name('user.attendance.detail');
     Route::get('/stamp_correction_request/list', [AttendanceController::class, 'requestList'])->name('user.request.list');
