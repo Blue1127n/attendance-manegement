@@ -25,55 +25,12 @@ use App\Models\User;
 |
 */
 
-// 管理者ログイン画面(一般は不要)
-Route::get('/admin/login', function () {
-    return view('auth.admin.login');
-})->name('admin.login');
-
-Route::middleware('auth')->post('/logout', function (Request $request) {
-    Auth::guard('web')->logout();
-    $request->session()->invalidate();
-    $request->session()->regenerateToken();
-    return redirect('/login');
-})->name('logout');
-
-Route::middleware('auth')->post('/admin/logout', function (Request $request) {
-    Auth::logout(); // ← ここは guard の指定いらない（全員一般ユーザーなので 'web'）
-    $request->session()->invalidate();
-    $request->session()->regenerateToken();
-    return redirect('/admin/login'); // ← login 画面の URL に正確に合わせてね！
-})->name('admin.logout');
-
-// ログイン処理（Fortifyではなく自作ルートでフォームリクエストを使う）一般ユーザー
-Route::post('/login', function (LoginRequest $request) {
-    if (!Auth::attempt($request->only('email', 'password'), $request->boolean('remember'))) {
-        return back()->withErrors(['email' => 'ログイン情報が登録されていません'])->withInput();
-    }
-    $request->session()->regenerate();
-    return redirect()->intended('/attendance');
-});
-
-// ログイン処理（Fortifyではなく自作ルートでフォームリクエストを使う）管理者
-Route::post('/admin/login', function (AdminLoginRequest $request) {
-    if (!Auth::attempt($request->only('email', 'password'), $request->boolean('remember'))) {
-        return back()->withErrors(['email' => 'ログイン情報が登録されていません'])->withInput();
-    }
-    $request->session()->regenerate();
-    return redirect()->intended('/admin/attendance/list');
-});
-
 // 会員登録処理（Fortifyではなく自作ルートでフォームリクエストを使う）
 Route::post('/register', function (RegisterRequest $request) {
     // フルネーム（姓＋名）を分割する
     $nameParts = preg_split('/\s+/u', trim($request->name));
     $lastName = $nameParts[0] ?? '';
     $firstName = $nameParts[1] ?? '';
-
-    Log::info('【名前分割】', [
-        '元の名前' => $request->name,
-        '姓' => $lastName,
-        '名' => $firstName,
-    ]);
 
     // ユーザー作成（last_name と first_name に分けて保存）
     $user = User::create([
@@ -96,6 +53,43 @@ Route::get('/email/verify', function () {
     return view('auth.verify-email');
 })->middleware('auth')->name('verification.notice');
 
+// 管理者ログイン画面(一般は不要)
+Route::get('/admin/login', function () {
+    return view('auth.admin.login');
+})->name('admin.login');
+
+// ログイン処理（Fortifyではなく自作ルートでフォームリクエストを使う）一般ユーザー
+Route::post('/login', function (LoginRequest $request) {
+    if (!Auth::attempt($request->only('email', 'password'), $request->boolean('remember'))) {
+        return back()->withErrors(['email' => 'ログイン情報が登録されていません'])->withInput();
+    }
+    $request->session()->regenerate();
+    return redirect()->intended('/attendance');
+});
+
+// ログイン処理（Fortifyではなく自作ルートでフォームリクエストを使う）管理者
+Route::post('/admin/login', function (AdminLoginRequest $request) {
+    if (!Auth::attempt($request->only('email', 'password'), $request->boolean('remember'))) {
+        return back()->withErrors(['email' => 'ログイン情報が登録されていません'])->withInput();
+    }
+    $request->session()->regenerate();
+    return redirect()->intended('/admin/attendance/list');
+});
+
+Route::middleware('auth')->post('/logout', function (Request $request) {
+    Auth::logout();
+    $request->session()->invalidate();
+    $request->session()->regenerateToken();
+    return redirect('/login');
+})->name('logout');
+
+Route::middleware('auth')->post('/admin/logout', function (Request $request) {
+    Auth::logout(); // ← ここは guard の指定いらない（全員一般ユーザーなので 'web'）
+    $request->session()->invalidate();
+    $request->session()->regenerateToken();
+    return redirect('/admin/login'); // ← login 画面の URL に正確に合わせてね！
+})->name('admin.logout');
+
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/attendance', [AttendanceController::class, 'index'])->name('user.attendance');
     Route::post('/attendance/clock-in', [AttendanceController::class, 'clockIn'])->name('user.attendance.clockIn');
@@ -111,6 +105,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
     Route::get('/attendance/list', [AdminController::class, 'attendanceList'])->name('admin.attendance.list');
     Route::get('/attendance/{id}', [AdminController::class, 'attendanceDetail'])->name('admin.attendance.detail');
+    Route::post('/attendance/{id}/update', [AdminController::class, 'updateAttendance'])->name('admin.attendance.update');
     Route::get('/staff/list', [AdminController::class, 'staffList'])->name('admin.staff.list');
     Route::get('/attendance/staff/{id}', [AdminController::class, 'staffAttendance'])->name('admin.staff.attendance');
     Route::get('/stamp_correction_request/list', [AdminController::class, 'requestList'])->name('admin.request.list');
