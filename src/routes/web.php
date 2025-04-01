@@ -8,8 +8,9 @@ use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\AdminController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
-use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
+use App\Http\Requests\LoginRequest;
+use App\Http\Requests\AdminLoginRequest;
 use App\Models\User;
 
 
@@ -35,6 +36,13 @@ Route::middleware('auth')->post('/logout', function (Request $request) {
     $request->session()->regenerateToken();
     return redirect('/login');
 })->name('logout');
+
+Route::middleware('auth')->post('/admin/logout', function (Request $request) {
+    Auth::logout(); // ← ここは guard の指定いらない（全員一般ユーザーなので 'web'）
+    $request->session()->invalidate();
+    $request->session()->regenerateToken();
+    return redirect('/admin/login'); // ← login 画面の URL に正確に合わせてね！
+})->name('admin.logout');
 
 // ログイン処理（Fortifyではなく自作ルートでフォームリクエストを使う）一般ユーザー
 Route::post('/login', function (LoginRequest $request) {

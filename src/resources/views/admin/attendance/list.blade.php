@@ -8,7 +8,7 @@
 
 @section('content')
 <div class="attendance-list-container">
-    <h1 class="title"><span class="vertical-line"></span>{{ \Carbon\Carbon::parse($attendance->date)->translatedFormat('Y/m/d') }}の勤怠</h1>
+    <h1 class="title"><span class="vertical-line"></span>{{ $currentDay->format('Y年n月j日') }}の勤怠</h1>
 
     <div class="day-navigation">
         <form action="{{ route('admin.attendance.list') }}" method="GET" class="nav-button">
@@ -21,7 +21,7 @@
 
         <div class="current-day">
             <img src="{{ asset('images/calendar.png') }}" alt="カレンダーアイコン" class="calendar-icon">
-            <span>{{ $currentDay->format('('Y/m/d')') }}</span>
+            <span>{{ $currentDay->format('Y/m/d') }}</span>
         </div>
 
         <form action="{{ route('admin.attendance.list') }}" method="GET" class="nav-button">
@@ -47,7 +47,7 @@
     <div class="attendance-body">
         @foreach ($attendances as $attendance)
             <div class="row">
-                <div>{{ $attendance->attendance->id }}</div>
+                <div>{{ $attendance->user->last_name }} {{ $attendance->user->first_name }}</div>
                 <div>{{ $attendance->start_time ?? '' }}</div>
                 <div>{{ $attendance->end_time ?? '' }}</div>
                 <div>{{ $attendance->break_time ?? '' }}</div>

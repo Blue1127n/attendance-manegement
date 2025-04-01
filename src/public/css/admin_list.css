@@ -1,0 +1,161 @@
+.container {
+    background-color: rgba(240, 239, 242, 1);
+    width: 100%;
+    max-width: 1512px;
+    margin: 0 auto;
+}
+
+.attendance-list-container {
+    background-color: rgba(240, 239, 242, 1);
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 50px 20px 200px;
+    font-family: 'Inter', sans-serif;
+}
+
+.title {
+    display: flex;
+    align-items: center;
+    font-weight: 700;
+    font-size: 30px;
+    line-height: 1;
+    color: rgba(0, 0, 0, 1);
+    margin-bottom: 40px;
+}
+
+.vertical-line {
+    display: inline-block;
+    height: 40px;
+    border: 8px solid rgba(0, 0, 0, 1);
+    background-color: rgba(0, 0, 0, 1);
+    margin-right: 20px;
+}
+
+.day-navigation {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 900px;
+    height: 60px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 1);
+    margin-bottom: 40px;
+    padding: 16px 30px;
+    box-sizing: border-box;
+}
+
+.nav-button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.day-button {
+    background: none;
+    border: none;
+    text-align: center;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+}
+
+.arrow-icon {
+    width: 20px;
+    height: 15px;
+}
+
+.day-label {
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 1;
+    letter-spacing: 0.15em;
+    color: rgba(115, 115, 115, 1);
+    margin-left: 8px;
+    margin-right: 8px;
+    text-align: center;
+}
+
+
+.current-day {
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 1;
+    color: rgba(0, 0, 0, 1);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.calendar-icon {
+    width: 25px;
+    height: 25px;
+    vertical-align: middle;
+    margin-right: 8px;
+}
+
+.attendance-header {
+    width: 900px;
+    border-bottom: 3px solid rgba(225, 225, 225, 1);
+    border-radius: 10px 10px 0 0;
+    background: rgba(255, 255, 255, 1);
+    margin-bottom: 0;
+}
+
+.row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+    text-align: center;
+}
+
+.attendance-header .row {
+    height: 31px;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    align-items: center;
+    text-align: center;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 1;
+    letter-spacing: 0.15em;
+    color: rgba(115, 115, 115, 1);
+    padding: 25px 0;
+}
+
+.attendance-body {
+    width: 900px;
+    background: rgba(255, 255, 255, 1);
+    overflow: hidden;
+    border-radius: 0 0 10px 10px;
+    margin-bottom: 0;
+}
+
+.attendance-body .row {
+    height: 33px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid rgba(225, 225, 225, 1);
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 1;
+    letter-spacing: 0.15em;
+    color: rgba(115, 115, 115, 1);
+    padding: 25px 0;
+}
+
+.attendance-body .row div {
+    flex: 1;
+    text-align: center;
+}
+
+.attendance-body .row:last-child {
+    border-bottom: none;
+    border-radius: 0 0 10px 10px;
+    padding: 28px 0;
+}
+
+.detail-link {
+    color: rgba(0, 0, 0, 1);
+    text-decoration: none;
+}

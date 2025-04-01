@@ -40,7 +40,7 @@ class AttendanceCorrectionRequest extends FormRequest
     }
 
     public function withValidator(Validator $validator)
-{
+    {
     $validator->after(function ($validator) {
         $clockIn = $this->input('clock_in');
         $clockOut = $this->input('clock_out');
@@ -59,7 +59,7 @@ class AttendanceCorrectionRequest extends FormRequest
                     $validator->errors()->add("breaks.$index", '休憩時間が勤務時間外です');
                 }
             }
-        }
-    });
-}
+            }
+        });
+    }
 }
