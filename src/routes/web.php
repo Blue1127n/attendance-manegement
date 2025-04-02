@@ -105,7 +105,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
     Route::get('/attendance/list', [AdminController::class, 'attendanceList'])->name('admin.attendance.list');
     Route::get('/attendance/{id}', [AdminController::class, 'attendanceDetail'])->name('admin.attendance.detail');
-    Route::post('/attendance/{id}/update', [AdminController::class, 'updateAttendance'])->name('admin.attendance.update');
+    Route::post('/attendance/{id}/update', [AdminController::class, 'updateAttendance'])->name('admin.attendance.correction');
     Route::get('/staff/list', [AdminController::class, 'staffList'])->name('admin.staff.list');
     Route::get('/attendance/staff/{id}', [AdminController::class, 'staffAttendance'])->name('admin.staff.attendance');
     Route::get('/stamp_correction_request/list', [AdminController::class, 'requestList'])->name('admin.request.list');

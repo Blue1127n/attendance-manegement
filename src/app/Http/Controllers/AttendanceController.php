@@ -12,8 +12,9 @@ use Carbon\Carbon;
 
 class AttendanceController extends Controller
 {
+
     public function index()
-{
+    {
     $user = Auth::user();
     $today = Carbon::today()->toDateString();
 
@@ -30,10 +31,10 @@ class AttendanceController extends Controller
     }
 
     return view('attendance.index', compact('attendance'));
-}
+    }
 
     public function clockIn()
-{
+    {
     $user = Auth::user();
 
     if (!$user) {
@@ -60,10 +61,10 @@ class AttendanceController extends Controller
     ]);
 
     return redirect()->route('user.attendance');
-}
+    }
 
     public function startBreak()
-{
+    {
     $user = Auth::user();
     $today = Carbon::today()->toDateString();
 
@@ -88,10 +89,10 @@ class AttendanceController extends Controller
     $attendance->update(['status' => '休憩中']);
 
     return redirect()->route('user.attendance');
-}
+    }
 
     public function endBreak()
-{
+    {
     $user = Auth::user();
     $today = Carbon::today()->toDateString();
 
@@ -114,10 +115,10 @@ class AttendanceController extends Controller
     $attendance->update(['status' => '出勤中']);
 
     return redirect()->route('user.attendance');
-}
+    }
 
     public function clockOut()
-{
+    {
     $user = Auth::user();
     $today = Carbon::today()->toDateString();
 
@@ -140,10 +141,10 @@ class AttendanceController extends Controller
     ]);
 
     return redirect()->route('user.attendance');
-}
+    }
 
     public function list(Request $request)
-{
+    {
     $user = Auth::user();
 
     // 月指定があれば使い、なければ今月を使う
@@ -198,12 +199,10 @@ class AttendanceController extends Controller
         'prevMonth' => $month->copy()->subMonth()->format('Y-m'), //前月の年月（例：2024-10）
         'nextMonth' => $month->copy()->addMonth()->format('Y-m'), //翌月の年月（例：2024-12）
     ]);
-}
-
-
+    }
 
     public function correctionRequest(AttendanceCorrectionRequest $request, $id)
-{
+    {
     $attendance = Attendance::with('breaks')->where('user_id', Auth::id())->findOrFail($id);
 
     // 修正申請（親）を作成
@@ -227,10 +226,10 @@ class AttendanceController extends Controller
     }
 
     return redirect()->route('user.request.list');
-}
+    }
 
     public function requestList()
-{
+    {
     $user = Auth::user();
 
     $pending = AttendanceRequest::with(['user', 'attendance'])
@@ -246,10 +245,10 @@ class AttendanceController extends Controller
         ->get();
 
     return view('attendance.request.list', compact('pending', 'approved'));
-}
+    }
 
     public function show($id)
-{
+    {
     $attendance = Attendance::with(['user', 'breaks'])->findOrFail($id);
 
     // 修正申請を取得
@@ -275,5 +274,5 @@ class AttendanceController extends Controller
     }
 
     return view('attendance.detail', compact('attendance', 'request'));
-}
+    }
 }
