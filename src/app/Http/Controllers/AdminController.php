@@ -114,17 +114,46 @@ class AdminController extends Controller
         return view('admin.staff.list', compact('users'));
     }
 
-    public function staffAttendance($id)
+    public function staffAttendance(Request $request, $id)
 {
-    $user = User::findOrFail($id); // 指定ユーザーを取得
-    $attendances = Attendance::where('user_id', $id)
-        ->orderBy('date', 'desc')
-        ->get();
+    $user = User::findOrFail($id); // users テーブルから IDが一致するユーザーを取得
+    //存在しないIDでアクセスされたらfindOrFail自動でエラーを表示してくれる
+
+    // 月の取得
+    $month = $request->input('month') ? Carbon::parse($request->input('month')) : Carbon::now(); //指定なければ今月を表示対象とする
+    $startOfMonth = $month->copy()->startOfMonth()->toDateString(); //その月の最初と最後の日を取得 例: 2025-03-01
+    $endOfMonth = $month->copy()->endOfMonth()->toDateString(); // 例: 2025-03-31
+
+    $attendances = Attendance::with('breaks') //attendances テーブルから、breaks（休憩時間）も一緒に読み込みます（with('breaks')）
+        ->where('user_id', $id)//where('user_id', $id) で「user_id がそのユーザーのもの」を絞り込み
+        ->whereBetween('date', [$startOfMonth, $endOfMonth]) //date がその月の日付範囲に含まれるレコードを取得
+        ->orderBy('date')
+        ->get() //結果を配列として全部取得
+        ->map(function ($attendance) {
+            // 加工して勤務時間など表示用に追加
+            $attendance->start_time = optional($attendance->clock_in)->format('H:i'); //出勤時間（clock_in）を "09:00" などに整形
+            $attendance->end_time = optional($attendance->clock_out)->format('H:i'); //退勤時間（clock_out）を "18:00" などに整形
+
+            $totalBreak = $attendance->breaks->sum(function ($break) {
+                return \Carbon\Carbon::parse($break->break_end)->diffInMinutes($break->break_start);
+            });
+
+            $attendance->break_time = $totalBreak ? sprintf('%d:%02d', floor($totalBreak / 60), $totalBreak % 60) : '';
+            $attendance->total_time = ($attendance->clock_in && $attendance->clock_out)
+                ? sprintf('%d:%02d',
+                    floor((\Carbon\Carbon::parse($attendance->clock_out)->diffInMinutes($attendance->clock_in) - $totalBreak) / 60),
+                    (\Carbon\Carbon::parse($attendance->clock_out)->diffInMinutes($attendance->clock_in) - $totalBreak) % 60
+                )
+                : '';
+            return $attendance;
+        });
 
     return view('admin.attendance.staff', [
-        'user' => $user,
-        'attendances' => $attendances,
+        'user' => $user, //$user（ユーザー情報）対象スタッフの情報
+        'attendances' => $attendances, //今月の勤怠データ
+        'currentMonth' => $month, //currentMonth：表示中の年月
+        'prevMonth' => $month->copy()->subMonth()->format('Y-m'), //prevMonth：前月（ボタン用）
+        'nextMonth' => $month->copy()->addMonth()->format('Y-m'), //nextMonth：翌月（ボタン用）
     ]);
-
 }
 }

@@ -1,0 +1,89 @@
+.container {
+    background-color: rgba(240, 239, 242, 1);
+    width: 100%;
+    max-width: 1512px;
+    margin: 0 auto;
+}
+
+.staff-attendance-container {
+    max-width: 900px;
+    margin: 100px auto;
+    padding: 0 20px;
+    background-color: #f0eff2;
+    font-family: 'Inter', sans-serif;
+}
+
+.title {
+    font-size: 30px;
+    font-weight: 700;
+    margin-bottom: 30px;
+    display: flex;
+    align-items: center;
+}
+
+.vertical-line {
+    width: 8px;
+    height: 40px;
+    background: #000;
+    margin-right: 20px;
+}
+
+.month-navigation {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.nav-button {
+    display: flex;
+}
+
+.month-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.arrow-icon,
+.calendar-icon {
+    height: 20px;
+    margin: 0 5px;
+}
+
+.attendance-header .row,
+.attendance-body .row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+    text-align: center;
+    padding: 15px 10px;
+    border-bottom: 2px solid #e1e1e1;
+    background: #fff;
+    font-weight: bold;
+}
+
+.attendance-body .row {
+    font-weight: normal;
+}
+
+.detail-link {
+    color: #000;
+    text-decoration: none;
+}
+
+.csv-button {
+    text-align: right;
+    margin-top: 20px;
+}
+
+.csv-button button {
+    background-color: #000;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    font-weight: bold;
+    border-radius: 6px;
+    cursor: pointer;
+}
