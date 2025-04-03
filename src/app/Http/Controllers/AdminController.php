@@ -114,4 +114,17 @@ class AdminController extends Controller
         return view('admin.staff.list', compact('users'));
     }
 
+    public function staffAttendance($id)
+{
+    $user = User::findOrFail($id); // 指定ユーザーを取得
+    $attendances = Attendance::where('user_id', $id)
+        ->orderBy('date', 'desc')
+        ->get();
+
+    return view('admin.attendance.staff', [
+        'user' => $user,
+        'attendances' => $attendances,
+    ]);
+
+}
 }
