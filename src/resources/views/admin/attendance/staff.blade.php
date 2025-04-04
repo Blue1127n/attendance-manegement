@@ -57,8 +57,11 @@
         @endforeach
     </div>
 
-    <div class="csv-button">
-        <button type="button">CSV出力</button>
+    <div class="csv-button-area">
+        <form action="{{ route('admin.staff.attendance.csv', ['id' => $user->id]) }}" method="GET">
+            <input type="hidden" name="month" value="{{ $currentMonth->format('Y-m') }}">
+            <button type="submit" class="csv-button">CSV出力</button>
+        </form>
     </div>
 </div>
 @endsection

@@ -13,7 +13,7 @@
     @if (session('corrected'))
         {{-- 修正済み表示 --}}
         <div class="detail-card">
-            <div class="row"><div class="label">名前</div><div class="value">{{ $attendance->user->last_name }} {{ $attendance->user->first_name }}</div></div>
+            <div class="row"><div class="label">名前</div><div class="value">{{ $attendance->user->last_name }}&nbsp;&nbsp;&nbsp;{{ $attendance->user->first_name }}</div></div>
             <div class="row"><div class="label">日付</div><div class="value">{{ \Carbon\Carbon::parse($attendance->date)->format('Y年n月j日') }}</div></div>
             <div class="row"><div class="label">出勤・退勤</div>
                 <div class="value">

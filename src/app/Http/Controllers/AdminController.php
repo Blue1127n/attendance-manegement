@@ -9,6 +9,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class AdminController extends Controller
 {
@@ -102,6 +103,12 @@ class AdminController extends Controller
         DB::commit(); //すべて成功したらDBに反映
 
         // セッションに「修正済み」フラグを持たせて戻る
+        //redirect()->route(...)処理後にリダイレクトadmin.attendance.detail という名前のルート（勤怠詳細画面）へ移動する処理
+        //['id' => $attendance->id] によって、該当の勤怠IDの詳細ページに戻る
+        //->with('corrected', true)セッションに「corrected = true」というフラグを一時的に保存
+        //この値は、リダイレクト先の Blade テンプレートで session('corrected') として取得できる
+        //これによって「修正済みかどうか」を画面側で判断できる
+        //コードの意味は「修正が完了したので、該当の勤怠詳細画面に戻って、さらに 'corrected' => true という情報も渡すよ！」
         return redirect()->route('admin.attendance.detail', $attendance->id)->with('corrected', true);
     } catch (\Exception $e) {
         DB::rollBack();
@@ -116,7 +123,7 @@ class AdminController extends Controller
     }
 
     public function staffAttendance(Request $request, $id)
-{
+    {
     $user = User::findOrFail($id); // users テーブルから IDが一致するユーザーを取得
     //存在しないIDでアクセスされたらfindOrFail自動でエラーを表示してくれる
 
@@ -156,5 +163,63 @@ class AdminController extends Controller
         'prevMonth' => $month->copy()->subMonth()->format('Y-m'), //prevMonth：前月（ボタン用）
         'nextMonth' => $month->copy()->addMonth()->format('Y-m'), //nextMonth：翌月（ボタン用）
     ]);
-}
+    }
+
+    public function exportStaffAttendanceCsv(Request $request, $id)
+    {
+    $user = User::findOrFail($id);
+    $month = $request->input('month') ? Carbon::parse($request->input('month')) : Carbon::now();
+    $startOfMonth = $month->copy()->startOfMonth()->toDateString();
+    $endOfMonth = $month->copy()->endOfMonth()->toDateString();
+
+    $attendances = Attendance::with('breaks')
+        ->where('user_id', $id)
+        ->whereBetween('date', [$startOfMonth, $endOfMonth])
+        ->orderBy('date')
+        ->get();
+
+    return new StreamedResponse(function () use ($attendances, $user) {
+        $handle = fopen('php://output', 'w');
+
+        // ヘッダー（Shift-JISに変換）
+        $headers = ['日付', '出勤', '退勤', '休憩時間', '合計時間'];
+        fputcsv($handle, array_map(function ($value) {
+            return mb_convert_encoding($value, 'SJIS-win', 'UTF-8');
+        }, $headers));
+
+        foreach ($attendances as $attendance) {
+            $clockIn = $attendance->clock_in ? Carbon::parse($attendance->clock_in)->format('H:i') : '';
+            $clockOut = $attendance->clock_out ? Carbon::parse($attendance->clock_out)->format('H:i') : '';
+
+            $totalBreak = $attendance->breaks->sum(function ($break) {
+                return Carbon::parse($break->break_end)->diffInMinutes($break->break_start);
+            });
+
+            $breakTime = $totalBreak ? sprintf('%d:%02d', floor($totalBreak / 60), $totalBreak % 60) : '';
+            $totalTime = ($attendance->clock_in && $attendance->clock_out)
+                ? sprintf('%d:%02d',
+                    floor((Carbon::parse($attendance->clock_out)->diffInMinutes($attendance->clock_in) - $totalBreak) / 60),
+                    (Carbon::parse($attendance->clock_out)->diffInMinutes($attendance->clock_in) - $totalBreak) % 60
+                ) : '';
+
+            // 各データも Shift-JIS に変換して出力
+            $row = [
+                Carbon::parse($attendance->date)->format('Y-m-d'),
+                $clockIn,
+                $clockOut,
+                $breakTime,
+                $totalTime
+            ];
+
+            fputcsv($handle, array_map(function ($value) {
+                return mb_convert_encoding($value, 'SJIS-win', 'UTF-8');
+            }, $row));
+        }
+
+        fclose($handle);
+    }, 200, [
+        "Content-Type" => "text/csv; charset=Shift_JIS",
+        "Content-Disposition" => "attachment; filename=attendance_{$user->last_name}_{$user->first_name}.csv",
+    ]);
+    }
 }
