@@ -47,7 +47,7 @@
     <div class="attendance-body">
         @foreach ($attendances as $attendance)
             <div class="row">
-                <div>{{ \Carbon\Carbon::parse($attendance->date)->format('m/d(D)') }}</div>
+                <div>{{ \Carbon\Carbon::parse($attendance->date)->translatedFormat('m/d(D)') }}</div>
                 <div>{{ $attendance->start_time ?? '' }}</div>
                 <div>{{ $attendance->end_time ?? '' }}</div>
                 <div>{{ $attendance->break_time ?? '' }}</div>

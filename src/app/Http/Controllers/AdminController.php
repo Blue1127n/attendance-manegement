@@ -131,8 +131,8 @@ class AdminController extends Controller
         ->get() //結果を配列として全部取得
         ->map(function ($attendance) {
             // 加工して勤務時間など表示用に追加
-            $attendance->start_time = optional($attendance->clock_in)->format('H:i'); //出勤時間（clock_in）を "09:00" などに整形
-            $attendance->end_time = optional($attendance->clock_out)->format('H:i'); //退勤時間（clock_out）を "18:00" などに整形
+            $attendance->start_time = $attendance->clock_in ? \Carbon\Carbon::parse($attendance->clock_in)->format('H:i') : ''; //出勤時間（clock_in）を "09:00" などに整形
+            $attendance->end_time = $attendance->clock_out ? \Carbon\Carbon::parse($attendance->clock_out)->format('H:i') : ''; //退勤時間（clock_out）を "18:00" などに整形
 
             $totalBreak = $attendance->breaks->sum(function ($break) {
                 return \Carbon\Carbon::parse($break->break_end)->diffInMinutes($break->break_start);
