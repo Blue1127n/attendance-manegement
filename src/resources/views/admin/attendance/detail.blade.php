@@ -10,6 +10,37 @@
 <div class="attendance-detail-container">
     <h1 class="title"><span class="vertical-line"></span>勤怠詳細</h1>
 
+    @if (session('corrected'))
+        {{-- 修正済み表示 --}}
+        <div class="detail-card">
+            <div class="row"><div class="label">名前</div><div class="value">{{ $attendance->user->last_name }} {{ $attendance->user->first_name }}</div></div>
+            <div class="row"><div class="label">日付</div><div class="value">{{ \Carbon\Carbon::parse($attendance->date)->format('Y年n月j日') }}</div></div>
+            <div class="row"><div class="label">出勤・退勤</div>
+                <div class="value">
+                    {{ \Carbon\Carbon::parse($attendance->clock_in)->format('H:i') }} ～ {{ \Carbon\Carbon::parse($attendance->clock_out)->format('H:i') }}
+                </div>
+            </div>
+
+            @foreach ($attendance->breaks as $break)
+                <div class="row">
+                    <div class="label">休憩</div>
+                    <div class="value">
+                        {{ \Carbon\Carbon::parse($break->break_start)->format('H:i') }} ～ {{ \Carbon\Carbon::parse($break->break_end)->format('H:i') }}
+                    </div>
+                </div>
+            @endforeach
+
+            <div class="row">
+                <div class="label">備考</div>
+                <div class="value">{{ $attendance->remarks }}</div>
+            </div>
+        </div>
+
+        <div class="button-container">
+            <button class="correction-button" disabled>修正済</button>
+        </div>
+    @else
+        {{-- 修正可能フォーム --}}
         <form action="{{ route('admin.attendance.correction', ['id' => $attendance->id]) }}" method="POST">
             @csrf
             <div class="detail-card">
@@ -74,5 +105,6 @@
                 <button type="submit" class="correction-button">修正</button>
             </div>
         </form>
+    @endif
 </div>
 @endsection

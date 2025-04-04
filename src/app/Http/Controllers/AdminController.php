@@ -101,7 +101,8 @@ class AdminController extends Controller
 
         DB::commit(); //すべて成功したらDBに反映
 
-        return redirect()->route('admin.attendance.detail', $attendance->id);
+        // セッションに「修正済み」フラグを持たせて戻る
+        return redirect()->route('admin.attendance.detail', $attendance->id)->with('corrected', true);
     } catch (\Exception $e) {
         DB::rollBack();
         return back()->withErrors(['error' => 'エラーが発生しました。もう一度お試しください。'])->withInput();
