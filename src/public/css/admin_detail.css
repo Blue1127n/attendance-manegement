@@ -19,8 +19,8 @@
     font-size: 30px;
     line-height: 1;
     color: rgba(0, 0, 0, 1);
-    margin-bottom: 30px;
-    margin-top: 95px;
+    margin-bottom: 10px;
+    margin-top: 70px;
 }
 
 .vertical-line {
@@ -34,7 +34,7 @@
 .detail-card {
     width: 900px;
     border-radius: 10px;
-    margin: 100px auto 0;
+    margin: 50px auto 0;
     background-color: rgba(255, 255, 255, 1);
     border: 1px solid rgba(225, 225, 225, 1);
     overflow: hidden;
@@ -116,7 +116,8 @@
 
 .button-container {
     text-align: right;
-    margin-top: 90px;
+    margin-top: 50px;
+    margin-bottom: 30px;
 }
 
 .correction-button {

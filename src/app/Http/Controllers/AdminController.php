@@ -167,42 +167,57 @@ class AdminController extends Controller
 
     public function exportStaffAttendanceCsv(Request $request, $id)
     {
-    $user = User::findOrFail($id);
-    $month = $request->input('month') ? Carbon::parse($request->input('month')) : Carbon::now();
-    $startOfMonth = $month->copy()->startOfMonth()->toDateString();
+    $user = User::findOrFail($id); //users テーブルから、指定された $id に一致するユーザー（スタッフ）を1人取得します
+    $month = $request->input('month') ? Carbon::parse($request->input('month')) : Carbon::now(); //フォームなどから「月」が送られてきたらその月、なければ今月を対象にします
+    $startOfMonth = $month->copy()->startOfMonth()->toDateString(); //$month の月の最初の日と最後の日を取得します（例：2025年3月なら 03-01 と 03-31）
     $endOfMonth = $month->copy()->endOfMonth()->toDateString();
 
-    $attendances = Attendance::with('breaks')
-        ->where('user_id', $id)
-        ->whereBetween('date', [$startOfMonth, $endOfMonth])
-        ->orderBy('date')
-        ->get();
+    $attendances = Attendance::with('breaks') //この勤怠に対応する休憩時間も一緒に取得
+        ->where('user_id', $id) //そのスタッフの勤怠だけ
+        ->whereBetween('date', [$startOfMonth, $endOfMonth]) //whereBetween('date', [...])：その月の日付の範囲だけ
+        ->orderBy('date') //日付順に並べる
+        ->get(); //全部取り出す
 
+    //ここからCSVを1行ずつ書き出していく処理を始める
     return new StreamedResponse(function () use ($attendances, $user) {
-        $handle = fopen('php://output', 'w');
+        $handle = fopen('php://output', 'w'); //CSVファイルを画面から直接出力するための準備
+        //fopen('php://output', 'w') は、通常のファイルではなく ブラウザに直接出力する特別な「出力ストリーム」 を開きます
+        //$handle はその出力の「ハンドル（取っ手）」のようなもので、fputcsv() 関数などでこの $handle を使って出力します
+        //例えるなら$handle は「プリンタの取っ手」。fputcsv() で「印刷する内容（CSVの行）」を渡して印刷（＝画面に出力）します
 
         // ヘッダー（Shift-JISに変換）
-        $headers = ['日付', '出勤', '退勤', '休憩時間', '合計時間'];
+        $headers = ['日付', '出勤', '退勤', '休憩時間', '合計時間']; //これはCSVの1行目のカラム名
+        //日本語が文字化けしないようにUTF-8からShift-JISに変換して書き出す
         fputcsv($handle, array_map(function ($value) {
             return mb_convert_encoding($value, 'SJIS-win', 'UTF-8');
         }, $headers));
 
+        //CSVに取得した勤怠データを1行ずつ追加
         foreach ($attendances as $attendance) {
             $clockIn = $attendance->clock_in ? Carbon::parse($attendance->clock_in)->format('H:i') : '';
             $clockOut = $attendance->clock_out ? Carbon::parse($attendance->clock_out)->format('H:i') : '';
 
+            //1日の休憩時間（合計）を「分単位」で計算する
+            //$attendance->breaks：その日の休憩時間の一覧  sum(...)：全ての休憩時間の「合計分数」を計算する
+            //Carbon::parse(...)->diffInMinutes(...)：終了時刻と開始時刻の差を「分」で計算
             $totalBreak = $attendance->breaks->sum(function ($break) {
                 return Carbon::parse($break->break_end)->diffInMinutes($break->break_start);
             });
 
+            //休憩の合計時間（分単位）を 「〇時間:〇〇分」形式に変換
+            //floor($totalBreak / 60)：時間部分（例：75分 → 1時間）$totalBreak % 60：分部分（例：75分 → 15分）
+            //sprintf()：整形して表示（例："1:15"）もし $totalBreak が0（休憩なし）だったら ''（空文字）になる
             $breakTime = $totalBreak ? sprintf('%d:%02d', floor($totalBreak / 60), $totalBreak % 60) : '';
+            //出勤～退勤の合計勤務時間（休憩を引いた分） を 〇時間:〇〇分 の形式にするためのコード
+            //1.clock_in ～ clock_out の時間差を分で計算 2.そこから $totalBreak（休憩時間）を引く
+            //3.sprintf() で 時間:分 に整形する 4.clock_in or clock_out がなければ空文字を返す
             $totalTime = ($attendance->clock_in && $attendance->clock_out)
                 ? sprintf('%d:%02d',
                     floor((Carbon::parse($attendance->clock_out)->diffInMinutes($attendance->clock_in) - $totalBreak) / 60),
                     (Carbon::parse($attendance->clock_out)->diffInMinutes($attendance->clock_in) - $totalBreak) % 60
                 ) : '';
 
-            // 各データも Shift-JIS に変換して出力
+            // 各データも Shift-JIS に1行ずつ変換して出力
             $row = [
                 Carbon::parse($attendance->date)->format('Y-m-d'),
                 $clockIn,
@@ -211,14 +226,17 @@ class AdminController extends Controller
                 $totalTime
             ];
 
+            ////日本語が文字化けしないようにUTF-8からShift-JISに変換して書き出す
             fputcsv($handle, array_map(function ($value) {
                 return mb_convert_encoding($value, 'SJIS-win', 'UTF-8');
             }, $row));
         }
 
+        //ファイルの設定（名前や形式）
         fclose($handle);
     }, 200, [
-        "Content-Type" => "text/csv; charset=Shift_JIS",
+        "Content-Type" => "text/csv; charset=Shift_JIS", //Content-Type：ファイル形式はCSVですよというお知らせ
+        //Content-Disposition：ダウンロード時のファイル名（ユーザー名付き）
         "Content-Disposition" => "attachment; filename=attendance_{$user->last_name}_{$user->first_name}.csv",
     ]);
     }

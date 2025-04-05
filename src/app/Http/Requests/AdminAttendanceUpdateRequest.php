@@ -45,20 +45,25 @@ class AdminAttendanceUpdateRequest extends FormRequest
         $clockIn = $this->input('clock_in');
         $clockOut = $this->input('clock_out');
 
-        // どちらかが未入力、または順序がおかしい場合も含めてまとめてバリデーション
+        // 出勤・退勤の不正チェック どちらかが未入力、または順序がおかしい場合も含めてまとめてバリデーション
         if (!$clockIn || !$clockOut || $clockIn >= $clockOut) {
             $validator->errors()->add('clock_in', '出勤時間もしくは退勤時間が不適切な値です');
         }
 
+        //// 休憩時間のチェック
         foreach ($this->input('breaks', []) as $index => $break) {
             $start = $break['start'] ?? null;
             $end = $break['end'] ?? null;
 
             if ($start && $end) {
-                if (($clockIn && $start < $clockIn) || ($clockOut && $end > $clockOut)) {
-                    $validator->errors()->add("breaks.$index", '休憩時間が勤務時間外です');
+                if ($start >= $end) {
+                    $validator->errors()->add("breaks.$index.start", '休憩時間が不適切な値です');
                 }
-            }
+
+                if (($clockIn && $start < $clockIn) || ($clockOut && $end > $clockOut)) {
+                    $validator->errors()->add("breaks.$index.start", '休憩時間が勤務時間外です');
+                }
+                }
             }
         });
     }
