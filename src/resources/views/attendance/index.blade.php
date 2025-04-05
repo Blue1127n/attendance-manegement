@@ -6,6 +6,24 @@
     <link rel="stylesheet" href="{{ asset('css/index.css') }}">
 @endpush
 
+{{-- 退勤済のときだけヘッダーを差し替える --}}
+@if ($attendance->status === '退勤済')
+    @section('header')
+        <div class="header">
+            <div class="header__nav">
+                <nav>
+                    <a href="{{ route('user.attendance.list') }}">今月の出勤一覧</a>
+                    <a href="{{ route('user.request.list') }}">申請一覧</a>
+                    <form action="{{ route('logout') }}" method="POST">
+                        @csrf
+                        <button type="submit" class="logout-button">ログアウト</button>
+                    </form>
+                </nav>
+            </div>
+        </div>
+    @endsection
+@endif
+
 @section('content')
     <div class="index-container">
         <div class="status-labels">

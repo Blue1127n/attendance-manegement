@@ -108,8 +108,9 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
     Route::post('/attendance/{id}/update', [AdminController::class, 'updateAttendance'])->name('admin.attendance.correction');
     Route::get('/staff/list', [AdminController::class, 'staffList'])->name('admin.staff.list');
     Route::get('/attendance/staff/{id}', [AdminController::class, 'staffAttendance'])->name('admin.staff.attendance');
-    Route::get('/admin/attendance/staff/{id}/csv', [AdminController::class, 'exportStaffAttendanceCsv'])->name('admin.staff.attendance.csv');
+    Route::get('/attendance/staff/{id}/csv', [AdminController::class, 'exportStaffAttendanceCsv'])->name('admin.staff.attendance.csv');
     Route::get('/stamp_correction_request/list', [AdminController::class, 'requestList'])->name('admin.request.list');
-    Route::get('/stamp_correction_request/approve/{attendance_correct_request}', [AdminController::class, 'approveRequest'])->name('admin.request.approve');
+    Route::get('/stamp_correction_request/approve/{attendance_correct_request}', [AdminController::class, 'approveRequest'])->name('admin.request.approve.show');
+    Route::post('/stamp_correction_request/approve/{attendance_correct_request}', [AdminController::class, 'updateApprove'])->name('admin.request.approve.update');
 });
 

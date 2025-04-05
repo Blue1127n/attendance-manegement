@@ -10,8 +10,8 @@
 <div class="attendance-detail-container">
     <h1 class="title"><span class="vertical-line"></span>勤怠詳細</h1>
 
-    @if (isset($request) && $request->status === '承認待ち')
-        {{-- 承認待ち → 表示専用 --}}
+    @if (isset($request) && in_array($request->status, ['承認待ち', '承認済み']))
+        {{-- 非編集モード（承認済み or 承認待ち） --}}
 
         <div class="detail-card">
             <div class="row">
@@ -33,9 +33,9 @@
                     <span class="time-text">{{ \Carbon\Carbon::parse($attendance->clock_out)->format('H:i') }}</span>
                 </div>
             </div>
-            @foreach ($attendance->breaks as $break)
+            @foreach ($attendance->breaks as $index => $break)
             <div class="row">
-                <div class="label">休憩</div>
+                <div class="label">{{ $index === 0 ? '休憩' : '休憩' . ($index + 1) }}</div>
                 <div class="value">
                     <span class="time-text">{{ \Carbon\Carbon::parse($break->break_start)->format('H:i') }}</span>
                     <span class="time-separator">〜</span>
@@ -49,11 +49,18 @@
             </div>
         </div>
 
+        @if ($request->status === '承認待ち')
         <div class="approval-message-container">
             <p class="approval-message">＊承認待ちのため修正はできません。</p>
         </div>
+        @elseif ($request->status === '承認済み')
+        <div class="approval-message-container">
+            <p class="approval-message">＊承認済みです。</p>
+        </div>
+        @endif
+
     @else
-        {{-- 通常フォーム（修正可能） --}}
+        {{-- 編集モード（申請が存在しない時だけ） --}}
         <form action="{{ route('user.attendance.correction', ['id' => $attendance->id]) }}" method="POST">
             @csrf
             <div class="detail-card">

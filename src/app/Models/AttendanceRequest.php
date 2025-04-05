@@ -15,8 +15,6 @@ class AttendanceRequest extends Model
         'attendance_id',
         'requested_clock_in',
         'requested_clock_out',
-        'requested_break_start',
-        'requested_break_end',
         'remarks',
         'status',
     ];
@@ -35,16 +33,6 @@ class AttendanceRequest extends Model
         return $value ? Carbon::parse($value)->format('H:i') : null;
 }
 
-    public function getRequestedBreakStartAttribute($value)
-{
-        return $value ? Carbon::parse($value)->format('H:i') : null;
-}
-
-    public function getRequestedBreakEndAttribute($value)
-{
-        return $value ? Carbon::parse($value)->format('H:i') : null;
-}
-
     public function user()
 {
         return $this->belongsTo(User::class);
@@ -56,6 +44,11 @@ class AttendanceRequest extends Model
 }
 
     public function breaks()
+{
+    return $this->hasMany(AttendanceRequestBreak::class);
+}
+
+public function attendance_request_breaks()
 {
     return $this->hasMany(AttendanceRequestBreak::class);
 }

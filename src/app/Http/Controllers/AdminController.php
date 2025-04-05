@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\AdminAttendanceUpdateRequest;
+use App\Models\AttendanceRequest;
 use App\Models\Attendance;
 use App\Models\BreakTime;
 use App\Models\User;
@@ -240,4 +241,68 @@ class AdminController extends Controller
         "Content-Disposition" => "attachment; filename=attendance_{$user->last_name}_{$user->first_name}.csv",
     ]);
     }
+
+    public function requestList()
+    {
+
+    // 「承認待ち」の申請一覧（status が '承認待ち'）
+    $pending = AttendanceRequest::with(['user', 'attendance'])
+        ->where('status', '承認待ち')
+        ->orderBy('updated_at', 'desc')
+        ->get();
+
+    // 「承認済み」の申請一覧（status が '承認済み'）
+    $approved = AttendanceRequest::with(['user', 'attendance'])
+        ->where('status', '承認済み')
+        ->orderBy('updated_at', 'desc')
+        ->get();
+
+    return view('admin.request.list', compact('pending', 'approved'));
+    }
+
+    public function approveRequest($id)
+{
+    $attendanceRequest = AttendanceRequest::with(['user', 'attendance', 'attendance_request_breaks'])->findOrFail($id);
+
+    return view('admin.request.approve', compact('attendanceRequest'));
 }
+
+public function updateApprove(Request $request, $id)
+{
+    DB::beginTransaction();
+
+    try {
+        $attRequest = AttendanceRequest::with(['attendance', 'attendance_request_breaks'])->findOrFail($id);
+
+        // attendances テーブルを更新
+        $attendance = $attRequest->attendance;
+        $attendance->clock_in = $attRequest->requested_clock_in;
+        $attendance->clock_out = $attRequest->requested_clock_out;
+        $attendance->remarks = $attRequest->remarks;
+        $attendance->save();
+
+        // breaks テーブルを全削除後、再登録（attendance_request_breaks を使用）
+        $attendance->breaks()->delete();
+        foreach ($attRequest->attendance_request_breaks as $break) {
+            $attendance->breaks()->create([
+                'break_start' => $break->requested_break_start,
+                'break_end' => $break->requested_break_end,
+            ]);
+        }
+
+        // 修正申請のステータス更新
+        $attRequest->status = '承認済み';
+        $attRequest->save();
+
+        DB::commit();
+
+        return redirect()->route('admin.request.approve', $attRequest->id)->with('corrected', true);
+    } catch (\Exception $e) {
+        DB::rollBack();
+        return back()->withErrors(['error' => 'エラーが発生しました']);
+    }
+}
+
+}
+
+

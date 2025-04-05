@@ -225,7 +225,7 @@ class AttendanceController extends Controller
         }
     }
 
-    return redirect()->route('user.request.list');
+    return redirect()->route('user.attendance.detail', ['id' => $attendance->id]);
     }
 
     public function requestList()
@@ -252,10 +252,10 @@ class AttendanceController extends Controller
     $attendance = Attendance::with(['user', 'breaks'])->findOrFail($id);
 
     // 修正申請を取得
-    $request = AttendanceRequest::with('breaks') // ← ここポイント
+    $request = AttendanceRequest::with('breaks')
         ->where('attendance_id', $id)
         ->where('user_id', Auth::id())
-        ->where('status', '承認待ち')
+        ->whereIn('status', ['承認待ち', '承認済み'])
         ->latest()
         ->first();
 

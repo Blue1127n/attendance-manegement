@@ -5,7 +5,7 @@
     margin: 0 auto;
 }
 
-.attendance-detail-container {
+.approve-container {
     width: 100%;
     max-width: 900px;
     background-color: rgba(240, 239, 242, 1);
@@ -20,7 +20,7 @@
     line-height: 1;
     color: rgba(0, 0, 0, 1);
     margin-bottom: 10px;
-    margin-top: 60px;
+    margin-top: 70px;
 }
 
 .vertical-line {
@@ -31,10 +31,10 @@
     margin-right: 20px;
 }
 
-.detail-card {
+.request-card {
     width: 900px;
     border-radius: 10px;
-    margin: 100px auto 30px;
+    margin: 50px auto 0;
     background-color: rgba(255, 255, 255, 1);
     border: 1px solid rgba(225, 225, 225, 1);
     overflow: hidden;
@@ -62,13 +62,32 @@
 }
 
 .year {
-    margin-right: 140px;
-    margin-left: 20px;
+    margin-right: 150px;
 }
 
-.year-static {
+.month-day {
     margin-right: 95px;
-    margin-left: 0;
+}
+
+.clock_in {
+    margin-right: 50px;
+}
+
+.clock_out {
+    margin-left: 50px;
+}
+
+.break_start {
+    margin-right: 50px;
+}
+
+.break_end {
+    margin-left: 50px;
+}
+
+.time-separator {
+    display: inline-block;
+    margin: 0 20px;
 }
 
 .value {
@@ -81,42 +100,10 @@
     color: rgba(0, 0, 0, 1);
 }
 
-.time-input::-webkit-calendar-picker-indicator {
-    display: none;
-    -webkit-appearance: none;
-}
-
-.time-input {
-    width: 103px;
-    height: 29px;
-    border-radius: 4px;
-    border: 1px solid rgba(225, 225, 225, 1);
-    padding: 5px;
-    font-weight: 700;
-    font-size: 16px;
-    line-height: 1;
-    letter-spacing: 0.15em;
-    vertical-align: middle;
-    text-align: center;
-    color: rgba(0, 0, 0, 1);
-}
-
-.time-separator {
-    display: inline-block;
-    margin: 0 40px;
-}
-
-.remarks-field {
-    width: 316px;
-    height: 72px;
-    border-radius: 4px;
-    border: 1px solid rgba(217, 217, 217, 1);
-    padding: 5px 5px;
-}
-
 .button-container {
     text-align: right;
-    margin-top: 90px;
+    margin-top: 50px;
+    margin-bottom: 30px;
 }
 
 .correction-button {
@@ -124,7 +111,7 @@
     width: 130px;
     height: 50px;
     border-radius: 5px;
-    padding: 12px 25px;
+    padding: 12px 10px;
     background: rgba(0, 0, 0, 1);
     color: rgba(255, 255, 255, 1);
     text-decoration: none;
@@ -135,21 +122,12 @@
     letter-spacing: 0.15em;
 }
 
-.approval-message-container {
-    max-width: 900px;
-    margin: 5px auto 0;
-    display: flex;
-    justify-content: flex-end;
+button[disabled].correction-button {
+    background-color: rgba(105, 105, 105, 1);
+    color: rgba(255, 255, 255, 1);
 }
 
-.approval-message {
-    color: rgba(255, 85, 85, 1);
-    font-size: 14px;
-}
 
-.error {
-    color: rgba(255, 85, 85, 1);
-    font-size: 14px;
-    margin-top: 4px;
-}
+
+
 

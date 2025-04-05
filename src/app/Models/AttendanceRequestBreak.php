@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 class AttendanceRequestBreak extends Model
 {
@@ -18,5 +19,15 @@ class AttendanceRequestBreak extends Model
     public function attendanceRequest()
 {
         return $this->belongsTo(AttendanceRequest::class);
+}
+
+public function getRequestedBreakStartAttribute($value)
+{
+        return $value ? Carbon::parse($value)->format('H:i') : null;
+}
+
+    public function getRequestedBreakEndAttribute($value)
+{
+        return $value ? Carbon::parse($value)->format('H:i') : null;
 }
 }

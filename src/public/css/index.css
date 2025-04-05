@@ -2,6 +2,7 @@
     background-color: rgba(240, 239, 242, 1);
     width: 100%;
     max-width: 1512px;
+    min-height: 982px;
     margin: 0 auto;
 }
 

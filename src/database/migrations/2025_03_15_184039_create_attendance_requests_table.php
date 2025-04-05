@@ -20,7 +20,7 @@ class CreateAttendanceRequestsTable extends Migration
             $table->time('requested_clock_in')->nullable();
             $table->time('requested_clock_out')->nullable();
             $table->text('remarks')->nullable();
-            $table->enum('status', ['承認待ち', '承認済み', '却下']);
+            $table->enum('status', ['承認待ち', '承認済み']);
             $table->timestamps();
         });
     }
