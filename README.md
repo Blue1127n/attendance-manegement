@@ -107,7 +107,7 @@
 
 ## ER図  
 
-![ER図](public/images/ER図.svg)  
+![ER図](images/ER図.svg)  
 
 
 ## URL  
