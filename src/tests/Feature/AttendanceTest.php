@@ -27,7 +27,7 @@ class AttendanceTest extends TestCase
     }
 
     //出勤ボタンが正しく機能する
-    public function testClockInWorks()
+    public function testClockIn()
     {
 
         $user = $this->createUser(); //ユーザーデータを作成
@@ -43,7 +43,7 @@ class AttendanceTest extends TestCase
     }
 
     //出勤は一日一回のみできる
-    public function testClockInOnlyOncePerDay()
+    public function testClockInOnce()
     {
 
         $user = $this->createUser(); //ユーザーデータを作成
@@ -71,7 +71,7 @@ class AttendanceTest extends TestCase
     }
 
     //出勤時刻が管理画面で確認できる
-    public function testClockInTimeShownInAdmin()
+    public function testAdminShowsClockIn()
     {
 
         $user = $this->createUser();
@@ -79,19 +79,19 @@ class AttendanceTest extends TestCase
 
         $this->post(route('user.attendance.clockIn'));
 
-        // DBに記録されているか確認
+        //DBに記録されているか確認
         $this->assertDatabaseHas('attendances', [
             'user_id' => $user->id,
             'status' => '出勤中',
         ]);
 
-        // 管理画面に出勤時間が表示されているか（例：10:00）
+        //管理画面に出勤時間が表示されているか（例：10:00）
         $clockIn = Attendance::where('user_id', $user->id)->first()->clock_in;
         //$formatted は 「整形された（format済みの）出勤時刻」 を保存する変数
         //'2025-04-07 09:15:00' みたいな日付＋時間の文字列が$formatted には入る
         $formatted = Carbon::parse($clockIn)->format('H:i');
 
-        $response = $this->get('/admin/attendance/list'); // 管理画面URLに合わせて
+        $response = $this->get('/admin/attendance/list'); //管理画面URLに合わせて
         $response->assertSee($formatted); //bladeで表示されてるか確認
     }
 }
