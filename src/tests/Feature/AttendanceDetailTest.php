@@ -25,9 +25,20 @@ class AttendanceDetailTest extends TestCase
         ]);
     }
 
-    //勤怠詳細画面の「名前」がログインユーザーの氏名になっている
-    public function testNameShown(){
+    private function createAttendances()
+    {
+        $attendance = Attendance::create([
+            'user_id' => $user->id,
+            'date' => now()->toDateString(),
+            'clock_in' => '09:00:00',
+            'clock_out' => '18:00:00',
+            'status' => '退勤済',
+        ]);
+    }
 
+    //勤怠詳細画面の「名前」がログインユーザーの氏名になっている
+    public function testNameShown()
+    {
         $user = $this->createUser();
         $this->actingAs($user);
 
@@ -53,17 +64,76 @@ class AttendanceDetailTest extends TestCase
     }
 
     //勤怠詳細画面の「日付」が選択した日付になっている
-    public function testDateShown(){
+    public function testDateShown()
+    {
+        $user = $this->createUser();
+        $this->actingAs($user);
 
+        $date = Carbon::create(2025, 4, 10); //任意の日付を指定
+
+        // 勤怠データ作成（今日の日付で）
+        $attendance = Attendance::create([
+            'user_id' => $user->id,
+            'date' => $date->toDateString(),
+            'clock_in' => '09:00:00',
+            'clock_out' => '18:00:00',
+            'status' => '退勤済',
+        ]);
+
+        $response = $this->get('/attendances/' . $attendance->id . '/detail');
+
+        $response->assertStatus(200);
+        $response->assertSee('2025年'); //Blade のフォーマットに合わせて書く
+        $response->assertSee('4月10日');
     }
 
     //「出勤・退勤」にて記されている時間がログインユーザーの打刻と一致している
-    public function testTimesShown(){
+    public function testTimesShown()
+    {
+        $user = $this->createUser();
+        $this->actingAs($user);
 
+        // 勤怠データ作成（今日の日付で）
+        $attendance = Attendance::create([
+            'user_id' => $user->id,
+            'date' => now()->toDateString(),
+            'clock_in' => '09:00:00',
+            'clock_out' => '18:00:00',
+            'status' => '退勤済',
+        ]);
+
+        $response = $this->get('/attendances/' . $attendance->id . '/detail');
+
+        $response->assertStatus(200);
+        $response->assertSee('09:00');
+        $response->assertSee('18:00');
     }
 
     //「休憩」にて記されている時間がログインユーザーの打刻と一致している
-    public function testBreaksShown(){
+    public function testBreaksShown()
+    {
+        $user = $this->createUser();
+        $this->actingAs($user);
 
+        // 勤怠データ作成（今日の日付で）
+        $attendance = Attendance::create([
+            'user_id' => $user->id,
+            'date' => now()->toDateString(),
+            'clock_in' => '09:00:00',
+            'clock_out' => '18:00:00',
+            'status' => '退勤済',
+        ]);
+
+        // 休憩データ追加（BreakTime モデル使用）
+        $attendance->breaks()->create([
+            'break_start' => '12:00:00',
+            'break_end' => '13:00:00',
+        ]);
+
+        $response = $this->get('/attendances/' . $attendance->id . '/detail');
+
+        $response->assertStatus(200);
+        $response->assertSee('12:00');
+        $response->assertSee('13:00');
     }
 }

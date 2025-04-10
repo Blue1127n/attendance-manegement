@@ -56,11 +56,17 @@ class AttendanceCorrectionRequest extends FormRequest
 
             if ($start && $end) {
                 if ($start >= $end) {
-                    $validator->errors()->add("breaks.$index.start", '休憩時間が不適切な値です');
+                    $validator->errors()->add("breaks.$index.start", '休憩時間が不適切な値です'); //開始時間が終了時間よりも後、または同じ → エラー
                 }
 
-                if (($clockIn && $start < $clockIn) || ($clockOut && $end > $clockOut)) {
+                //休憩開始時間が出勤時間より早い → エラー（breaks.$index.start）
+                if ($clockIn && $start < $clockIn) {
                     $validator->errors()->add("breaks.$index.start", '休憩時間が勤務時間外です');
+                }
+
+                //休憩終了時間が退勤時間より遅い → エラー（breaks.$index.end）
+                if ($clockOut && $end > $clockOut) {
+                    $validator->errors()->add("breaks.$index.end", '休憩時間が勤務時間外です');
                 }
                 }
             }

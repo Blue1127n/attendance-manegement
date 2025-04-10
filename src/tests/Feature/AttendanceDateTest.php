@@ -13,6 +13,7 @@ class AttendanceDateTest extends TestCase
 {
     use RefreshDatabase;
 
+    //現在の日時情報がUIと同じ形式で出力されている
     public function testDateTimeDisplay()
     {
         // Carbon::setTestNow() は日時を固定できる関数　(Carbon::create(2025, 4, 5, 13, 5))は2025年4月5日 (土)13:05で固定
