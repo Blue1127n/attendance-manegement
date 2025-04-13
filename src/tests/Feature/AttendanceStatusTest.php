@@ -16,7 +16,8 @@ class AttendanceStatusTest extends TestCase
 
     private function createUser()
     {
-        //ダミーのユーザーのデータを作成する
+        //return は 関数の「戻り値」を返すという意味
+        //この場合「作成したユーザーオブジェクトを戻す（使えるようにする）」という意味
         return User::forceCreate([
             'last_name' => '田中',
             'first_name' => '一郎',

@@ -302,7 +302,6 @@ public function updateApprove(Request $request, $id)
         return back()->withErrors(['error' => 'エラーが発生しました']);
     }
 }
-
 }
 
 
