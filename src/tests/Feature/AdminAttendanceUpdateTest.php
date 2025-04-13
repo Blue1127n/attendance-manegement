@@ -163,7 +163,7 @@ class AdminAttendanceUpdateTest extends TestCase
         $attendance = Attendance::create([
             'user_id' => $user3->id,
             'date' => now()->toDateString(),
-            'clock_in' => '09:00:00',
+            'clock_in' => '08:00:00',
             'clock_out' => '18:00:00',
             'status' => '退勤済',
         ]);
@@ -174,12 +174,12 @@ class AdminAttendanceUpdateTest extends TestCase
             'attendance_id' => $attendance->id,
             'requested_clock_in' => '09:00:00',
             'requested_clock_out' => '19:00:00',
-            'remarks' => '退勤修正申請',
+            'remarks' => '出退勤修正申請',
             'status' => '承認待ち',
         ]);
 
-        //休憩申請（←これが必要！）
-        \App\Models\AttendanceRequestBreak::create([
+        //休憩申請データも作成
+        AttendanceRequestBreak::create([
             'attendance_request_id' => $request->id,
             'requested_break_start' => '12:00:00',
             'requested_break_end' => '13:00:00',
@@ -187,12 +187,23 @@ class AdminAttendanceUpdateTest extends TestCase
 
         $this->actingAs($user1);
 
+        // attendance リレーションを手動で読み込む
+        //$request->attendance を使ったとき、初めてbelongsTo などのリレーションを取得しようとします
+        //テスト環境ではクエリキャッシュが働かなかったり、再取得に失敗することがあるため
+        //「事前に load() で明示的に読み込んでおく」ことが安全
+        $request->load('attendance');
+
+        // nullじゃないか確認 「修正申請がちゃんと勤怠データに紐づいているか」をテストする前提条件としてチェック
+        // リレーションが正しくつながっているか事前確認
+        $this->assertNotNull($request->attendance);
+
         //POSTで承認処理を実行
-        $response = $this->post('/admin/stamp_correction_request/approve/' . $request->id);
+        $response = $this->post(route('admin.request.approve.update', $request->id));
 
-        $response->assertRedirect(); // 正常にリダイレクトするか
+        // 正常リダイレクトを確認
+        $response->assertRedirect();
 
-        //勤怠が更新されたか
+        //勤怠情報が更新されたか確認
         $this->assertDatabaseHas('attendances', [
             'id' => $attendance->id,
             'clock_in' => '09:00:00',
@@ -210,6 +221,6 @@ class AdminAttendanceUpdateTest extends TestCase
             'attendance_id' => $attendance->id,
             'break_start' => '12:00:00',
             'break_end' => '13:00:00',
-       ]);
+        ]);
     }
 }

@@ -273,9 +273,14 @@ public function updateApprove(Request $request, $id)
 
     try {
         $attRequest = AttendanceRequest::with(['attendance', 'attendance_request_breaks'])->findOrFail($id);
+        //修正申請の取得 findOrFail($id) 存在しないIDなら404で落ちる
+        //リレーション付きで読み込みwith(['attendance', 'attendance_request_breaks'])
 
         // attendances テーブルを更新
         $attendance = $attRequest->attendance;
+        if (!$attendance) {
+            throw new \Exception('対応する勤怠データが見つかりません');
+        }
         $attendance->clock_in = $attRequest->requested_clock_in;
         $attendance->clock_out = $attRequest->requested_clock_out;
         $attendance->remarks = $attRequest->remarks;
@@ -296,7 +301,7 @@ public function updateApprove(Request $request, $id)
 
         DB::commit();
 
-        return redirect()->route('admin.request.approve', $attRequest->id)->with('corrected', true);
+        return redirect()->route('admin.request.approve.show', $attRequest->id)->with('corrected', true);
     } catch (\Exception $e) {
         DB::rollBack();
         return back()->withErrors(['error' => 'エラーが発生しました']);
