@@ -14,7 +14,15 @@
 
     `cd attendance-manegement`  
 
-  3.DockerDesktopアプリを立ち上げる  
+  3.リモートURLを変更  
+
+    `git remote set-url origin <新しいリポジトリURL>`  
+
+  4.初回のmainブランチをプッシュ  
+
+    `git push origin main`  
+
+  5.DockerDesktopアプリを立ち上げる  
 
     `docker-compose up -d --build`  
     `code .`  
@@ -61,6 +69,7 @@
 **MailHog環境構築**  
 
   1.docker-compose.ymlに追加  
+    注意：他のサービス（php, nginx, mysqlなど）と同じインデント階層に追加  
 
     ``` text  
     services:
@@ -95,6 +104,7 @@
     `php artisan serve`  
     `docker-compose restart
 
+以下のリンクは認証メールの遷移先です。<br>
 - http://localhost:8025/
 
 
