@@ -63,3 +63,21 @@ h2 {
 
 
 
+@media (min-width: 768px) and (max-width: 850px) {
+    .verify-email-container {
+        width: 90%;
+        padding: 20px;
+    }
+
+    h2 {
+        font-size: 18px;
+    }
+
+    .verify-button {
+        font-size: 18px;
+    }
+
+    .resend-button {
+        font-size: 15px;
+    }
+}

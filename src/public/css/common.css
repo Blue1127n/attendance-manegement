@@ -82,3 +82,39 @@ nav a:hover {
     text-align: center;
 }
 
+@media (min-width: 768px) and (max-width: 850px) {
+    .header {
+        padding: 10px 15px;
+    }
+
+    .header__logo img {
+        width: 25vw; /* タブレット用にロゴを縮小 */
+        /*画像そのもの（.header__logo img）に対して 25vw を適用するのがより適切*/
+        padding-left: 0;
+        max-width: 250px;
+    }
+
+    .header__nav {
+        margin-left: auto;
+    }
+
+    nav {
+        display: flex;
+        gap: 20px;
+        align-items: center;
+        flex-wrap: wrap; /* ←入りきらないときだけ改行 */
+    }
+
+    nav a {
+        font-size: 20px;
+    }
+
+    .logout-button {
+        font-size: 20px;
+    }
+
+    .content {
+        padding: 15px;
+    }
+}
+

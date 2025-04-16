@@ -158,3 +158,59 @@
     color: rgba(0, 0, 0, 1);
     text-decoration: none;
 }
+
+@media (min-width: 768px) and (max-width: 850px) {
+    .attendance-list-container {
+        width: 100%;
+        padding: 20px;
+    }
+
+    .title {
+        font-size: 23px;
+        margin-bottom: 17px;
+    }
+
+    .month-navigation {
+        width: 100%;
+        min-width: auto; /* ← 明示的な最小幅を避ける */
+        padding: 16px 15px;
+        box-sizing: border-box;
+    }
+
+    .month-label {
+        font-size: 12px;
+    }
+
+    .current-month {
+        font-size: 15px;
+    }
+
+    .attendance-header {
+        width: 100%;
+        overflow-x: auto;
+    }
+
+    .attendance-body {
+        width: 100%;
+        overflow-x: auto;
+    }
+
+    .attendance-header .row {
+        font-size: 12px;
+        min-width: 600px;
+    }
+
+    .attendance-body .row {
+        font-size: 12px;
+        min-width: 600px;
+    }
+
+    .attendance-body .row div {
+        flex: 1;
+        text-align: center;
+    }
+
+    .detail-link {
+        font-size: 12px;
+    }
+}

@@ -83,34 +83,32 @@ p a {
     margin-top: 5px;
 }
 
-@media screen and (max-width: 850px) {
+/*vw を使ってもいいですが、フォームの入力欄などは max-width 指定がすでにある*/
+/***フォーム系（input, buttonなど）**は、基本的に width: 100% + max-width: 680px でOK*/
+/*vw を使うと入力欄が画面に対して小さくなりすぎることがあるのでおすすめしません*/
+/*画像・ロゴなどのサイズ調整に vw を使うのはOKです*/
+@media (min-width: 768px) and (max-width: 850px) {
     .register-container {
         width: 90%;
-        max-width: 600px;
         padding: 20px;
     }
 
-    input, button {
-        width: 100%;
+    .form-group input,
+    button {
+        font-size: 20px;
+        height: 50px;
     }
 
     h2 {
-        font-size: 30px;
+        font-size: 28px;
+        margin-bottom: 40px;
     }
 
-    label {
+    .form-group label {
         font-size: 20px;
     }
 
-    button {
-        font-size: 22px;
-        height: 50px;
+    p a {
+        font-size: 18px;
     }
 }
-
-@media screen and (min-width: 1400px) and (max-width: 1540px) {
-    .register-container {
-        width: 680px;
-    }
-}
-

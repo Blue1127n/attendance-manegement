@@ -104,4 +104,31 @@ p {
     color: rgba(0, 0, 0, 1);
 }
 
+@media (min-width: 768px) and (max-width: 850px) {
+    .index-container {
+        width: 90%;
+        padding: 30px;
+    }
 
+    .btn {
+        font-size: 24px;
+        height: 60px;
+    }
+
+    h1 {
+        font-size: 28px;
+    }
+
+
+    h2 {
+        font-size: 50px;
+    }
+
+    .status-label {
+        font-size: 14px;
+    }
+
+    p {
+        font-size: 18px;
+    }
+}

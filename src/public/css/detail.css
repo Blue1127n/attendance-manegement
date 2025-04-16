@@ -153,3 +153,88 @@
     margin-top: 4px;
 }
 
+@media (min-width: 768px) and (max-width: 850px) {
+    .attendance-detail-container {
+        width: 100%;
+        padding: 0 15px;
+    }
+
+    .title {
+        font-size: 22px;
+        margin-top: 30px;
+        margin-bottom: 15px;
+    }
+
+    .detail-card {
+        width: 100%;
+        max-width: 100%;
+        margin: 40px auto 20px;
+        border-radius: 8px;
+    }
+
+    .row {
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        height: auto;
+        padding: 15px 20px;
+        gap: 12px 0;
+    }
+
+    .label {
+        width: 120px;
+        font-size: 13px;
+        padding-left: 0;
+        margin-bottom: 0;
+    }
+
+    .value {
+        flex: 1;
+        width: calc(100% - 120px);
+        font-size: 13px;
+    }
+
+    .year,
+    .year-static {
+        margin-right: 10px;
+        margin-left: 0;
+    }
+
+    .time-input {
+        font-size: 13px;
+        width: 95px;
+    }
+
+    .remarks-field {
+        width: 100%;
+        font-size: 13px;
+    }
+
+    .time-separator {
+        margin: 0 10px;
+    }
+
+    .correction-button {
+        width: 90%;
+        font-size: 18px;
+        height: 45px;
+    }
+
+    .button-container {
+        text-align: center;
+        margin: 20px 0 40px;
+    }
+
+    .approval-message-container {
+        justify-content: center;
+        padding: 10px 0;
+    }
+
+    .approval-message {
+        font-size: 13px;
+    }
+
+    .error {
+        font-size: 12px;
+    }
+}
