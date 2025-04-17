@@ -159,3 +159,52 @@
     color: rgba(0, 0, 0, 1);
     text-decoration: none;
 }
+
+@media (min-width: 768px) and (max-width: 850px) {
+    .attendance-list-container {
+        width: 100%;
+        padding: 20px;
+    }
+
+    .title {
+        font-size: 23px;
+        margin-bottom: 23px;
+    }
+
+    .day-navigation {
+        width: 100%;
+        max-width: 900px;
+        margin-bottom: 23px;
+        padding: 16px 15px;
+        box-sizing: border-box;
+    }
+
+    .day-label {
+        font-size: 12px;
+    }
+
+    .current-day {
+        font-size: 15px;
+    }
+
+    .attendance-header {
+        width: 100%;
+        overflow-x: auto;
+    }
+
+    .attendance-header .row {
+        font-size: 12px;
+        padding: 12px 0;
+    }
+
+    .attendance-body {
+        width: 100%;
+        overflow-x: auto;
+    }
+
+    .attendance-body .row {
+        min-width: 600px;
+        font-size: 12px;
+        padding: 12px 0;
+    }
+}

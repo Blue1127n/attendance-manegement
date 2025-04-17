@@ -40,6 +40,7 @@
 
 nav {
     display: flex;
+    align-items: center;
     gap: 40px;
 }
 
@@ -59,7 +60,10 @@ nav a:hover {
 }
 
 .logout-button {
-    all: unset;
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
     color: rgba(255, 255, 255, 1);
     background-color: rgba(0, 0, 0, 1);
     text-decoration: none;
@@ -88,10 +92,10 @@ nav a:hover {
     }
 
     .header__logo img {
-        width: 25vw; /* タブレット用にロゴを縮小 */
+        width: 20vw; /* タブレット用にロゴを縮小 */
         /*画像そのもの（.header__logo img）に対して 25vw を適用するのがより適切*/
         padding-left: 0;
-        max-width: 250px;
+        max-width: 200px;
     }
 
     .header__nav {
@@ -100,21 +104,50 @@ nav a:hover {
 
     nav {
         display: flex;
-        gap: 20px;
-        align-items: center;
-        flex-wrap: wrap; /* ←入りきらないときだけ改行 */
+        gap: 10px;
+        flex-wrap: nowrap; /* ナビゲーションを1行で並べる */
     }
 
     nav a {
-        font-size: 20px;
+        font-size: 14px;
+        white-space: nowrap;
     }
 
     .logout-button {
-        font-size: 20px;
+        font-size: 14px;
+        white-space: nowrap;
     }
 
     .content {
-        padding: 15px;
+        padding: 10px;
     }
 }
+
+@media (min-width: 1024px) and (max-width: 1100px){
+    .header {
+        padding: 8px 10px;
+    }
+
+    .header__logo img {
+        width: 180px;
+        padding-left: 0;
+    }
+
+    nav {
+        gap: 10px;
+        flex-wrap: nowrap;
+    }
+
+    nav a {
+        font-size: 16px;
+        white-space: nowrap; /* ← 強制改行防止 */
+    }
+
+    .logout-button {
+        font-size: 16px;
+        white-space: nowrap;
+    }
+}
+
+
 
