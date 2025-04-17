@@ -127,7 +127,92 @@ button[disabled].correction-button {
     color: rgba(255, 255, 255, 1);
 }
 
+@media (min-width: 768px) and (max-width: 850px) {
+    .approve-container {
+        width: 100%;
+        padding: 0 16px;
+        box-sizing: border-box;
+    }
 
+    .title {
+        font-size: 23px;
+        margin-top: 40px;
+        margin-bottom: 6px;
+    }
+
+    .request-card {
+        width: 100%;
+        margin: 40px auto 20px;
+        padding: 16px;
+        box-sizing: border-box;
+    }
+
+    .row {
+        flex-direction: row; /* ←ここが重要！崩れ防止 */
+        align-items: center;
+        height: auto;
+        padding: 10px 0;
+    }
+
+    .label {
+        width: 160px; /* 少し狭くする */
+        min-width: 120px; /* 可変対応しつつ最低限確保 */
+        font-size: 12px;
+        padding-left: 4px;
+        margin-bottom: 2px;
+    }
+
+    .month-day {
+        margin-right: 6px;
+    }
+
+    .clock_in {
+        margin-right: 4px;
+    }
+
+    .clock_out {
+        margin-left: 4px;
+    }
+
+    .break_start {
+        margin-right: 4px;
+    }
+
+    .break_end {
+        margin-left: 4px;
+    }
+
+    .time-separator {
+        margin: 0 8px;
+    }
+
+    .value {
+        width: 100%;
+        font-size: 14px;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+    }
+
+    .value > * {
+        margin-right: 8px;
+        margin-bottom: 6px;
+    }
+
+    .value > *:last-child {
+        margin-right: 0;
+    }
+
+    .button-container {
+        text-align: right;
+        margin-top: 28px;
+        margin-bottom: 17px;
+    }
+
+    .correction-button {
+        font-size: 16px;
+    }
+}
 
 
 

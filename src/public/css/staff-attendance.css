@@ -178,6 +178,57 @@
     cursor: pointer;
 }
 
+@media (min-width: 768px) and (max-width: 850px) {
+    .staff-attendance-container {
+        width: 100%;
+        padding: 20px;
+    }
 
+    .title {
+        font-size: 23px;
+        margin-bottom: 28px;
+    }
+
+    .month-navigation {
+        width: 100%;
+        max-width: 900px;
+        margin-bottom: 28px;
+        padding: 16px 15px;
+        box-sizing: border-box;
+    }
+
+    .month-label {
+        font-size: 12px;
+    }
+
+    .current-month {
+        font-size: 12px;
+    }
+
+    .attendance-header {
+        width: 100%;
+        overflow-x: auto;
+    }
+
+    .attendance-header .row {
+        font-size: 12px;
+        padding: 12px 0;
+    }
+
+    .attendance-body {
+        width: 100%;
+        overflow-x: auto;
+    }
+
+    .attendance-body .row {
+        min-width: 600px;
+        font-size: 12px;
+        padding: 12px 0;
+    }
+
+    .csv-button {
+        font-size: 16px;
+    }
+}
 
 

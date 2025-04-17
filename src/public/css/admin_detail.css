@@ -142,3 +142,97 @@
     margin-top: 4px;
 }
 
+@media (min-width: 768px) and (max-width: 850px) {
+    .attendance-detail-container {
+        width: 100%;
+        padding: 0 16px;
+        box-sizing: border-box;
+    }
+
+    .title {
+        font-size: 22px;
+        margin-top: 40px;
+        margin-bottom: 6px;
+    }
+
+    .detail-card {
+        width: 100%;
+        margin: 40px auto 20px;
+        padding: 16px;
+        box-sizing: border-box;
+    }
+
+    .row {
+        flex-direction: row; /* ←ここが重要！崩れ防止 */
+        align-items: center;
+        height: auto;
+        padding: 10px 0;
+    }
+
+    .label {
+        width: 160px; /* 少し狭くする */
+        min-width: 120px; /* 可変対応しつつ最低限確保 */
+        font-size: 13px;
+        padding-left: 4px;
+        margin-bottom: 2px;
+    }
+
+    .year,
+    .year-static {
+        margin-right: 10px;
+        margin-left: 0;
+    }
+
+    .value {
+        width: 100%;
+        font-size: 14px;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+    }
+
+    .value > * {
+        margin-right: 8px;
+        margin-bottom: 6px;
+    }
+
+    .time-input {
+        font-size: 14px;
+        width: 90px;
+        margin-bottom: 4px;
+    }
+
+    .remarks-field {
+        width: 100%;
+        font-size: 14px;
+    }
+
+    .time-separator {
+        margin: 0 8px;
+    }
+
+    .correction-button {
+        width: 90%;
+        max-width: 300px;
+        font-size: 18px;
+        height: 45px;
+    }
+
+    .button-container {
+        text-align: right;
+        margin-top: 30px;
+    }
+
+    .approval-message-container {
+        justify-content: center;
+        padding: 10px 0;
+    }
+
+    .approval-message {
+        font-size: 13px;
+    }
+
+    .error {
+        font-size: 12px;
+    }
+}

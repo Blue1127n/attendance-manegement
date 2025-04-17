@@ -89,3 +89,36 @@ tr:last-child td {
     color: rgba(0, 0, 0, 1);
     text-decoration: none;
 }
+
+@media (min-width: 768px) and (max-width: 850px) {
+    .request-list-container {
+        width: 100%;
+        padding: 20px;
+    }
+
+    .title {
+        font-size: 23px;
+        margin-bottom: 23px;
+    }
+
+    .tabs {
+        margin-bottom: 23px;
+        font-size: 12px;
+    }
+
+    .tabs li {
+        flex: 1;
+        text-align: center;
+        font-size: 12px;
+    }
+
+    table {
+        width: 100%;
+        min-width: auto;
+    }
+
+    th, td {
+        padding: 11px;
+        font-size: 12px;
+    }
+}
