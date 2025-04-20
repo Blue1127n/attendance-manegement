@@ -15,51 +15,52 @@ class AttendanceController extends Controller
 
     public function index()
     {
-    $user = Auth::user();
-    $today = Carbon::today()->toDateString();
+    $user = Auth::user(); //現在ログイン中のユーザー情報を取得
+    $today = Carbon::today()->toDateString(); //今日の日付を「2025-04-20」形式で取得
 
-    // 今日の勤怠データを取得（なければnull）
-    $attendance = Attendance::where('user_id', $user->id)
-                            ->where('date', $today)
+    //attendanceテーブルから「ログインユーザーの今日の勤怠情報」を1件だけ取得（なければnull）
+    $attendance = Attendance::where('user_id', $user->id)//Attendance::whereはattendanceテーブルから探すuser_id が $user->id（ログイン中のユーザーのID）と一致する行を検索する
+                            ->where('date', $today)//date カラムが $today（今日の日付）と一致する行
                             ->first();
 
-    // 勤怠データがない場合は「勤務外」とする
+    //もし勤怠データが見つからなければ、「勤務外」としてダミーのオブジェクトを作る
     if (!$attendance) {
         $attendance = (object) [
             'status' => '勤務外'
     ];
     }
-
+    //attendance.indexビューに、$attendance変数を渡して表示
     return view('attendance.index', compact('attendance'));
     }
 
     public function clockIn()
     {
     $user = Auth::user();
-
+    //万が一ログインしていなければ、ログイン画面にリダイレクトし「ログインしてください」というエラーメッセージを表示
+    //これは二重チェックなので基本的には削除してOKです
     if (!$user) {
         return redirect()->route('login')->with('error', 'ログインしてください');
     }
 
     $today = Carbon::today()->toDateString();
 
-    // すでに出勤している場合は処理しない
+    //今日すでに勤怠があるかDB確認
     $attendance = Attendance::where('user_id', $user->id)
                             ->where('date', $today)
                             ->first();
-
+    //もしすでに出勤していたら、勤怠画面に戻して「既に出勤済みです」と表示   &&（かつ）
     if ($attendance && $attendance->clock_in) {
         return redirect()->route('user.attendance')->with('error', '既に出勤済みです');
     }
 
-    // 初回出勤記録を作成
+    //まだ出勤してなければ出勤記録をattendances テーブルに新規作成保存
     Attendance::create([
         'user_id' => $user->id,
         'date' => $today,
         'clock_in' => now(),
         'status' => '出勤中',
     ]);
-
+    //最後に勤怠画面へリダイレクト
     return redirect()->route('user.attendance');
     }
 
@@ -71,7 +72,8 @@ class AttendanceController extends Controller
     $attendance = Attendance::where('user_id', $user->id)
                             ->where('date', $today)
                             ->first();
-
+    //$attendance が存在しない !$attendance 勤務外（今日まだ出勤していない） ||（または）
+    //$attendance->status !== '出勤中' 出勤中以外 勤怠画面に戻して「出勤していないため休憩できません」と表示
     if (!$attendance || $attendance->status !== '出勤中') {
         return redirect()->route('user.attendance')->with('error', '出勤していないため休憩できません');
     }
@@ -106,7 +108,12 @@ class AttendanceController extends Controller
 
     // 最後の休憩データに終了時間を記録する
     $lastBreak = $attendance->breaks()->whereNull('break_end')->latest()->first();
+    //$attendance->breaks()これは Eloquentリレーション（Attendance モデル → Break モデル）を通して「この勤怠の休憩一覧」を取得する意味
+    //->whereNull('break_end')break_end が null（未入力） の休憩を絞り込む つまり「まだ終わってない休憩」
+    //->latest() created_at の 降順（新しい順）で並べる Laravelの latest() はデフォルトで created_at を使います
+    //->first() 最初の1件（＝一番新しいやつ）を取得
 
+    //「まだ break_end が入っていない休憩（＝休憩中の記録）があるなら、その終了時刻に今の時刻を入れる」という意味です
     if ($lastBreak) {
         $lastBreak->update(['break_end' => now()]);
     }
