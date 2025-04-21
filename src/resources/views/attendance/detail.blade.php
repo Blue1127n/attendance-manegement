@@ -33,8 +33,15 @@
                     <span class="time-text">{{ \Carbon\Carbon::parse($attendance->clock_out)->format('H:i') }}</span>
                 </div>
             </div>
+
+            {{-- これは「複数ある休憩時間を順番に表示するためのループ処理」です
+                $attendance->breaks は、その勤怠データに紐づく休憩時間一覧
+                たとえば、2回休憩した日には2件分のデータが入っています
+                as $index => $break の形で書くと：$index：ループの番号（0から始まる）$break：その回の休憩データ（1件） --}}
             @foreach ($attendance->breaks as $index => $break)
             <div class="row">
+                {{-- もし $index が 0 なら「休憩」と表示し、それ以外（＝1回目以降）なら「休憩2」「休憩3」…と表示する
+                    各休憩時間を1セットずつ表示 1回目は「休憩」、2回目からは「休憩2」「休憩3」…になるように表示 --}}
                 <div class="label">{{ $index === 0 ? '休憩' : '休憩' . ($index + 1) }}</div>
                 <div class="value">
                     <span class="time-text">{{ \Carbon\Carbon::parse($break->break_start)->format('H:i') }}</span>

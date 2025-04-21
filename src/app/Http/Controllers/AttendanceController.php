@@ -155,39 +155,64 @@ class AttendanceController extends Controller
     $user = Auth::user();
 
     // 月指定があれば使い、なければ今月を使う
-    $month = $request->input('month')
-        ? Carbon::parse($request->input('month'))
+    $month = $request->input('month') //これはURLやフォームなどから **month という名前の入力（クエリパラメータ）**を受け取る処理 例：/attendance/list?month=2025-04 とアクセスされた場合、2025-04 が取得されます
+        ? Carbon::parse($request->input('month')) //三項演算子 ? :   これは「if の短縮版」のようなものです
         : Carbon::now();
+        //if ($request->input('month')) {
+        //$month = Carbon::parse($request->input('month'));
+        //} else {
+        //$month = Carbon::now();
+        //}と同じ意味です
+        //Carbon::parse(...)これは「文字列の日付」をCarbonオブジェクト（日付型）に変換する関数 （2025-04-01 になります）
+        //Carbon::now()  now() は現在時刻を表す Carbon オブジェクト  URLに month がついていないときは「今月」を自動的に表示する
 
+    //$month->copy() が入っている理由は **「元の $month を壊さないようにするため」**です
+    //$month = Carbon::parse('2025-04');  // 2025-04-01（見た目はそうでも、内部は「2025-04」）
+    //$startOfMonth = $month->startOfMonth();  // ここで $month が「4月1日」に変化！
+    //$endOfMonth = $month->endOfMonth();      // この時点では $month はすでに「4月1日」になってるからOKそうに見えるけど…
+    // このあとで「前月・次月」を使う場合に困る！
+    //$month->copy()->subMonth()->format('Y-m');  // ←すでに変わってると意図通り動かなくなる可能性あり
+    //copy() を使うメリット $month 本体を 変更せずに startOfMonth や endOfMonth を使える 安全・予測どおりに動く 複数の場所で $month を使いたいときに安心
+    //$month->startOfMonth()  $month 自体が「その月の1日」に変更される
+    //$month->copy()->startOfMonth()  $month はそのまま残して、「コピーした月」を1日に変更して使う
     $startOfMonth = $month->copy()->startOfMonth()->toDateString(); //$month の月の 最初の日を取得
     $endOfMonth = $month->copy()->endOfMonth()->toDateString(); //$month の月の 最後の日を取得
 
     $attendances = Attendance::with('breaks') //指定された月の間にある 自分の勤怠情報を breaks 関係も一緒に取得
         ->where('user_id', $user->id)
         ->whereBetween('date', [$startOfMonth, $endOfMonth])
-        ->orderBy('date', 'asc')
-        ->get()
-        ->map(function ($attendance) {
+        ->orderBy('date', 'asc') //date カラム（＝出勤日）を昇順（asc: ascending）で並べる  ※もし desc（降順）にすると、逆順になります
+        ->get() //勤怠データを全部取得
+        ->map(function ($attendance) { //コレクション（配列のようなもの）を1つずつ処理するためのメソッドです
+            //get() で取得した勤怠データ（複数件）に対して1件ずつ $attendance に入れて出勤時間や合計時間などを整えて加工された新しい配列として返す
+            //出勤・退勤時間を整形 休憩合計を算出 合計勤務時間を計算 つまり「取得した勤怠データを、見やすく整えてから画面に渡す」ために使ってる
+
             // 出勤時間と退勤時間（フォーマット整える）
             $attendance->start_time = $attendance->clock_in ? Carbon::parse($attendance->clock_in)->format('H:i') : '';
             $attendance->end_time = $attendance->clock_out ? Carbon::parse($attendance->clock_out)->format('H:i') : '';
 
-            // 休憩時間の合計（分単位）
-            $totalBreakMinutes = $attendance->breaks->reduce(function ($carry, $break) {
-                if ($break->break_start && $break->break_end) {
-                    $start = Carbon::parse($break->break_start);
+            // 休憩時間の合計（分単位）複数の休憩がある場合も全部の「休憩時間（分）」を足し合わせる
+            $totalBreakMinutes = $attendance->breaks->reduce(function ($carry, $break) { //その日の すべての休憩時間の合計（分単位） を計算する処理
+                //reduce() とは？Laravelの Collection にある関数で、配列の 合計・合成処理などをする時によく使います
+                //reduce(コールバック関数, 初期値)コールバック関数は：function ($carry, $break) $carry：今までの合計（前回の結果） $break：現在の休憩データ（1件）
+                //$attendance->breaks：この日の「全休憩レコード（複数）」を取得 それらを1つずつ $break に入れて合計していく $carry は累積合計、最初は 0
+                if ($break->break_start && $break->break_end) { //「開始時間と終了時間が両方ある休憩だけ」を対象にする 入力途中など、片方が空ならスキップする
+                    $start = Carbon::parse($break->break_start); //文字列型の時刻（例：'15:00'）を Carbon インスタンスに変換
                     $end = Carbon::parse($break->break_end);
-                    return $carry + $end->diffInMinutes($start);
+                    return $carry + $end->diffInMinutes($start); //diffInMinutes() で「その1回の休憩の分数」を取得 　それを$carry に加算して返す（これが次回の $carry に入る）
                 }
-                return $carry;
+                return $carry; //もし片方が null なら、その $break はスキップして現在の $carry をそのまま返す
             }, 0);
 
             // 表示形式に整形
+            //$totalBreakMinutes = その日の全休憩の合計（分）
             $attendance->break_time = $totalBreakMinutes
-                ? sprintf('%d:%02d', floor($totalBreakMinutes / 60), $totalBreakMinutes % 60)
+                ? sprintf('%d:%02d', floor($totalBreakMinutes / 60), $totalBreakMinutes % 60) //「◯時間◯分」形式（例：1:15）に整形して、画面に表示されるようにな
                 : '';
 
             // 合計勤務時間（出勤～退勤 - 休憩）
+            //退勤してたら、出勤〜退勤の時間から休憩時間を引いて表示形式に整える
+            //例：出勤8:00、退勤17:00、休憩1時間 → 合計勤務時間 8:00
             if ($attendance->clock_in && $attendance->clock_out) {
                 $start = Carbon::parse($attendance->clock_in);
                 $end = Carbon::parse($attendance->clock_out);
@@ -200,11 +225,12 @@ class AttendanceController extends Controller
             return $attendance;
         });
 
+    // Bladeに渡すデータ
     return view('attendance.list', [
-        'attendances' => $attendances, //勤怠データ
-        'currentMonth' => $month, //現在表示している月
-        'prevMonth' => $month->copy()->subMonth()->format('Y-m'), //前月の年月（例：2024-10）
-        'nextMonth' => $month->copy()->addMonth()->format('Y-m'), //翌月の年月（例：2024-12）
+        'attendances' => $attendances, //attendances：整形済の勤怠データ一覧
+        'currentMonth' => $month, //currentMonth：現在の表示月
+        'prevMonth' => $month->copy()->subMonth()->format('Y-m'), //前月の年月（例：2024-10） prevMonth：前月（ナビゲーション用）
+        'nextMonth' => $month->copy()->addMonth()->format('Y-m'), //翌月の年月（例：2024-12） nextMonth：翌月（ナビゲーション用）
     ]);
     }
 
