@@ -10,6 +10,10 @@
 <div class="attendance-detail-container">
     <h1 class="title"><span class="vertical-line"></span>勤怠詳細</h1>
 
+    {{-- isset($request)は$request が nullでないか確認  存在しない変数にアクセスするとエラーになるのを防いでいる
+        in_array($request->status, ['承認待ち', '承認済み'])は $request->status の値が、配列の中に 含まれているか調べる
+        '承認待ち' または '承認済み' の場合に true を返す この条件が true なら「修正不可のモード」に切り替わる--}}
+
     @if (isset($request) && in_array($request->status, ['承認待ち', '承認済み']))
         {{-- 非編集モード（承認済み or 承認待ち） --}}
 
@@ -40,7 +44,7 @@
                 as $index => $break の形で書くと：$index：ループの番号（0から始まる）$break：その回の休憩データ（1件） --}}
             @foreach ($attendance->breaks as $index => $break)
             <div class="row">
-                {{-- もし $index が 0 なら「休憩」と表示し、それ以外（＝1回目以降）なら「休憩2」「休憩3」…と表示する
+                {{-- もし $index が 0 なら「休憩」と表示し、それ以外（1回目以降）なら「休憩2」「休憩3」…と表示する
                     各休憩時間を1セットずつ表示 1回目は「休憩」、2回目からは「休憩2」「休憩3」…になるように表示 --}}
                 <div class="label">{{ $index === 0 ? '休憩' : '休憩' . ($index + 1) }}</div>
                 <div class="value">
@@ -106,6 +110,8 @@
                     </div>
                 </div>
                 @endforeach
+
+                {{-- 「休憩の追加入力欄」を出すために使用--}}
                 @php $lastIndex = count($attendance->breaks); @endphp
                 <div class="row">
                     <div class="label">休憩{{ $lastIndex === 0 ? '' : $lastIndex + 1 }}</div>
