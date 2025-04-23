@@ -236,30 +236,32 @@ class AttendanceController extends Controller
 
     public function correctionRequest(AttendanceCorrectionRequest $request, $id)
     {
+    //Attendanceモデルから、idが一致する勤怠レコードを1件取得 with('breaks') を使って、その勤怠に紐づく休憩時間も一緒に取得
+    //user_id が ログインユーザー自身 のものであることを条件にしている findOrFail($id) → $id に一致する勤怠がなければ エラー（404）を出す
     $attendance = Attendance::with('breaks')->where('user_id', Auth::id())->findOrFail($id);
 
     // 修正申請（親）を作成
     $attendanceRequest = AttendanceRequest::create([
-        'user_id' => Auth::id(),
+        'user_id' => Auth::id(), //Auth::id() の意味 現在ログインしているユーザーのIDを自動で取得してセットします これは「この修正申請は誰が出したか？」を記録するため
         'attendance_id' => $attendance->id,
         'requested_clock_in' => $request->clock_in,
         'requested_clock_out' => $request->clock_out,
-        'remarks' => trim($request->remarks),
+        'remarks' => trim($request->remarks), //ユーザーが入力した備考（remarks）の前後にある空白を削除します
         'status' => '承認待ち',
     ]);
 
-    // 修正申請の休憩（子）を複数登録
-    foreach ($request->breaks as $break) {
-        if (!empty($break['start']) && !empty($break['end'])) {
-            $attendanceRequest->breaks()->create([
-                'requested_break_start' => $break['start'],
+    // 修正申請の休憩（子）を複数登録  ユーザーが送信した「休憩時間の修正データ（複数）」を、1件ずつデータベースに保存
+    foreach ($request->breaks as $break) { //$request->breaks は、休憩の配列（start, end） になってる
+        if (!empty($break['start']) && !empty($break['end'])) { //empty() は「値が空じゃないか？」を確認する関数
+            $attendanceRequest->breaks()->create([ //両方入力されていたら breaks() リレーション経由で保存
+                'requested_break_start' => $break['start'], //つまり：「開始と終了が両方ある休憩だけを保存」ってこと
                 'requested_break_end' => $break['end'],
             ]);
         }
     }
 
-    return redirect()->route('user.attendance.detail', ['id' => $attendance->id]);
-    }
+    return redirect()->route('user.attendance.detail', ['id' => $attendance->id]); //修正申請が完了したあとに、該当の勤怠詳細ページへリダイレクト
+    } //パラメータ id を渡しているので、URLとしては例えば：/attendances/5/detailみたいなページに飛ぶことになります
 
     public function requestList()
     {
@@ -282,9 +284,11 @@ class AttendanceController extends Controller
 
     public function show($id)
     {
+    //「ユーザー情報」「休憩時間」も with() でまとめて勤怠データ（attendances テーブル）を $id から1件取得
     $attendance = Attendance::with(['user', 'breaks'])->findOrFail($id);
 
     // 修正申請を取得
+    //今表示している勤怠に対する申請でログインユーザーが出した申請で承認待ち か 承認済み のものを最新の1件だけ取得
     $request = AttendanceRequest::with('breaks')
         ->where('attendance_id', $id)
         ->where('user_id', Auth::id())
@@ -292,12 +296,15 @@ class AttendanceController extends Controller
         ->latest()
         ->first();
 
+    //修正申請が存在するなら、勤怠データに上書き表示
     if ($request) {
         $attendance->clock_in = $request->requested_clock_in;
         $attendance->clock_out = $request->requested_clock_out;
         $attendance->remarks = $request->remarks;
 
         // 修正申請に紐づく休憩をすべて上書き表示用に
+        //元の $attendance->breaks に 置き換えて表示用にする
+        //map() は1件ずつ整えて (object) にしている（配列じゃなくてオブジェクトに）
         $attendance->breaks = $request->breaks->map(function ($break) {
             return (object)[
                 'break_start' => $break->requested_break_start,
@@ -305,7 +312,7 @@ class AttendanceController extends Controller
             ];
         });
     }
-
+    //勤怠詳細ページに $attendance（上書き後も含む）と $request（申請があれば）を渡す
     return view('attendance.detail', compact('attendance', 'request'));
     }
 }

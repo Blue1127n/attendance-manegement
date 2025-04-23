@@ -17,7 +17,7 @@ class AttendancesTableSeeder extends Seeder
     public function run()
     {
         $users = User::all();
-        $months = [1, 2, 3, 4];
+        $months = [1, 2, 3, 4, 5];
         $year = 2025;
 
         foreach ($users as $user) {

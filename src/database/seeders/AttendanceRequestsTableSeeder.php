@@ -21,9 +21,9 @@ class AttendanceRequestsTableSeeder extends Seeder
         $users = User::where('email', '!=', 'admin@example.com')->get();
 
         foreach ($users as $user) {
-            // 1〜3月分でランダムに2〜3件申請
+            // 1〜5月分でランダムに2〜3件申請
             $attendances = Attendance::where('user_id', $user->id)
-                ->whereIn(\DB::raw('MONTH(date)'), [1, 2, 3])
+                ->whereIn(\DB::raw('MONTH(date)'), [1, 2, 3, 4, 5])
                 ->inRandomOrder()
                 ->take(rand(2, 3))
                 ->get();
@@ -36,7 +36,7 @@ class AttendanceRequestsTableSeeder extends Seeder
                     'requested_clock_in' => \Carbon\Carbon::parse($attendance->clock_in)->addMinutes(15)->format('H:i:s'),
                     'requested_clock_out' => \Carbon\Carbon::parse($attendance->clock_out)->addMinutes(15)->format('H:i:s'),
                     'remarks' => '出退勤時間と休憩時間の調整',
-                    'status' => Arr::random(['承認待ち', '承認済み', '却下']),
+                    'status' => Arr::random(['承認待ち', '承認済み']),
                 ]);
             }
         }
