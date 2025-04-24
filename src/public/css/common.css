@@ -1,0 +1,153 @@
+.container {
+    background-color: rgba(0, 0, 0, 1);
+    width: 100%;
+    max-width: 1512px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 1);
+    padding: 10px 25px;
+    width: 100%;
+    max-width: 1512px;
+}
+
+.content {
+    width: 100%;
+    max-width: 1512px;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.header__logo img {
+    width: 370px;
+    color: rgba(255, 255, 255, 1);
+    padding-left: 25px;
+}
+
+.header__nav {
+    display: flex;
+    margin-left: auto;
+    max-width: 1512px;
+}
+
+nav {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+}
+
+nav a {
+    color: rgba(255, 255, 255, 1);
+    text-decoration: none;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 1;
+    text-align: center;
+    vertical-align: middle;
+}
+
+nav a:hover {
+    text-decoration: underline;
+}
+
+.logout-button {
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    color: rgba(255, 255, 255, 1);
+    background-color: rgba(0, 0, 0, 1);
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 1;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+}
+
+.logout-button:hover {
+    text-decoration: underline;
+}
+
+.index-container {
+    width: 100%;
+    max-width: 1512px;
+    padding: 30px;
+    text-align: center;
+}
+
+@media (min-width: 768px) and (max-width: 850px) {
+    .header {
+        padding: 10px 15px;
+    }
+
+    .header__logo img {
+        width: 20vw; /* タブレット用にロゴを縮小 */
+        /*画像そのもの（.header__logo img）に対して 25vw を適用するのがより適切*/
+        padding-left: 0;
+        max-width: 200px;
+    }
+
+    .header__nav {
+        margin-left: auto;
+    }
+
+    nav {
+        display: flex;
+        gap: 10px;
+        flex-wrap: nowrap; /* ナビゲーションを1行で並べる */
+    }
+
+    nav a {
+        font-size: 14px;
+        white-space: nowrap;
+    }
+
+    .logout-button {
+        font-size: 14px;
+        white-space: nowrap;
+    }
+
+    .content {
+        padding: 10px;
+    }
+}
+
+@media (min-width: 1024px) and (max-width: 1100px){
+    .header {
+        padding: 8px 10px;
+    }
+
+    .header__logo img {
+        width: 180px;
+        padding-left: 0;
+    }
+
+    nav {
+        gap: 10px;
+        flex-wrap: nowrap;
+    }
+
+    nav a {
+        font-size: 16px;
+        white-space: nowrap; /* ← 強制改行防止 */
+    }
+
+    .logout-button {
+        font-size: 16px;
+        white-space: nowrap;
+    }
+}
+
+
+

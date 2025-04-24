@@ -1,0 +1,114 @@
+.container {
+    background-color: rgba(255, 255, 255, 1);
+    width: 100%;
+    max-width: 1512px;
+    padding: 20px;
+}
+
+.register-container {
+    width: 680px;
+    background-color: rgba(255, 255, 255, 1);
+    text-align: center;
+    margin: 30px auto;
+    padding: 20px;
+    font-family: 'Inter', sans-serif;
+}
+
+h2 {
+    color: rgba(0, 0, 0, 1);
+    font-weight: 700;
+    font-size: 36px;
+    line-height: 1;
+    margin-bottom: 50px;
+}
+
+.form-group {
+    margin-bottom: 40px;
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    color: rgba(0, 0, 0, 1);
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 1;
+    margin-bottom: 5px;
+}
+
+.form-group input {
+    width: 100%;
+    max-width: 680px;
+    height: 45px;
+    padding: 8px;
+    border: 1px solid rgba(0, 0, 0, 1);
+    border-radius: 4px;
+}
+
+button {
+    width: 100%;
+    max-width: 680px;
+    height: 60px;
+    padding: 10px;
+    background-color: rgba(0, 0, 0, 1);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    color: rgba(255, 255, 255, 1);
+    font-weight: 700;
+    font-size: 26px;
+    line-height: 1;
+    text-align: center;
+    vertical-align: middle;
+    margin-top: 80px;
+    margin-bottom: 30px;
+}
+
+p {
+    text-align: center;
+}
+
+p a {
+    color: rgba(0, 115, 204, 1);
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 1;
+    vertical-align: middle;
+    text-decoration: none;
+}
+
+.error-message {
+    color: rgba(255, 85, 85, 1);
+    font-size: 15px;
+    margin-top: 5px;
+}
+
+/*vw を使ってもいいですが、フォームの入力欄などは max-width 指定がすでにある*/
+/***フォーム系（input, buttonなど）**は、基本的に width: 100% + max-width: 680px でOK*/
+/*vw を使うと入力欄が画面に対して小さくなりすぎることがあるのでおすすめしません*/
+/*画像・ロゴなどのサイズ調整に vw を使うのはOKです*/
+@media (min-width: 768px) and (max-width: 850px) {
+    .register-container {
+        width: 90%;
+        padding: 20px;
+    }
+
+    .form-group input,
+    button {
+        font-size: 20px;
+        height: 50px;
+    }
+
+    h2 {
+        font-size: 28px;
+        margin-bottom: 40px;
+    }
+
+    .form-group label {
+        font-size: 20px;
+    }
+
+    p a {
+        font-size: 18px;
+    }
+}

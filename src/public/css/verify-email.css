@@ -1,0 +1,83 @@
+.container {
+    background-color: rgba(255, 255, 255, 1);
+    width: 100%;
+    max-width: 1512px;
+    padding: 20px;
+}
+
+.verify-email-container {
+    text-align: center;
+    width: 100%;
+    max-width: 1512px;
+    margin: 0 auto;
+    padding-top: 230px;
+    font-family: 'Inter', sans-serif;
+}
+
+h2 {
+    color: rgba(0, 0, 0, 1);
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 1;
+    text-align: center;
+}
+
+.verify-button {
+    display: inline-block;
+    width: 257px;
+    height: 69px;
+    border-radius: 10px;
+    border: 1px solid rgba(0, 0, 0, 1);
+    background: rgba(217, 217, 217, 1);
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 1;
+    text-align: center;
+    color: rgba(0, 0, 0, 1);
+    padding: 22px 25px;
+    margin-top: 50px;
+    margin-bottom: 50px;
+    text-decoration: none;
+}
+
+.verify-button:hover {
+    background-color: rgba(217, 217, 217, 1);
+}
+
+.resend-button {
+    background: none;
+    border: none;
+    color: rgba(0, 115, 204, 1);
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 1;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+.resend-button:hover {
+    text-decoration: underline;
+}
+
+
+
+@media (min-width: 768px) and (max-width: 850px) {
+    .verify-email-container {
+        width: 90%;
+        padding: 20px;
+    }
+
+    h2 {
+        font-size: 18px;
+    }
+
+    .verify-button {
+        font-size: 18px;
+    }
+
+    .resend-button {
+        font-size: 15px;
+    }
+}

@@ -1,0 +1,124 @@
+.container {
+    background-color: rgba(240, 239, 242, 1);
+    width: 100%;
+    max-width: 1512px;
+    margin: 0 auto;
+}
+
+.request-list-container {
+    width: 100%;
+    max-width: 900px;
+    margin: 100px auto;
+    background-color: rgba(240, 239, 242, 1);
+    font-family: 'Inter', sans-serif;
+}
+
+.title {
+    display: flex;
+    align-items: center;
+    font-weight: 700;
+    font-size: 30px;
+    line-height: 1;
+    letter-spacing: 0.15em;
+    color: rgba(0, 0, 0, 1);
+    margin-bottom: 40px;
+    margin-top: 20px;
+}
+
+.vertical-line {
+    display: inline-block;
+    height: 40px;
+    border: 4px solid rgba(0, 0, 0, 1);
+    background-color: rgba(0, 0, 0, 1);
+    margin-right: 20px;
+}
+
+.tabs {
+    display: flex;
+    list-style: none;
+    padding: 5px;
+    border-bottom: 1px solid rgba(0, 0, 0, 1);
+    margin-bottom: 40px;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 1;
+    letter-spacing: 0.15em;
+}
+
+.tabs li {
+    padding: 10px 25px;
+    cursor: pointer;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 1;
+    letter-spacing: 0.15em;
+    color: rgba(115, 115, 115, 1);
+}
+
+.tabs li.active {
+    color: rgba(0, 0, 0, 1);
+}
+
+table {
+    width: 100%;
+    max-width: 900px;
+    height: 33px;
+    background: rgba(255, 255, 255, 1);
+    border-collapse: collapse;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+th, td {
+    padding: 15px;
+    text-align: center;
+    border-bottom: 3px solid rgba(225, 225, 225, 1);
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 1;
+    letter-spacing: 0.15em;
+    color: rgba(115, 115, 115, 1);
+    background: rgba(255, 255, 255, 1);
+}
+
+tr:last-child td {
+    border-bottom: none;
+}
+
+.detail-link {
+    color: rgba(0, 0, 0, 1);
+    text-decoration: none;
+}
+
+@media (min-width: 768px) and (max-width: 850px) {
+    .request-list-container {
+        width: 100%;
+        padding: 20px;
+    }
+
+    .title {
+        font-size: 23px;
+        margin-bottom: 23px;
+    }
+
+    .tabs {
+        margin-bottom: 23px;
+        font-size: 12px;
+    }
+
+    .tabs li {
+        flex: 1;
+        text-align: center;
+        font-size: 12px;
+    }
+
+    table {
+        width: 100%;
+        min-width: auto;
+    }
+
+    th, td {
+        padding: 11px;
+        font-size: 12px;
+    }
+}

@@ -1,0 +1,218 @@
+.container {
+    background-color: rgba(240, 239, 242, 1);
+    width: 100%;
+    max-width: 1512px;
+    margin: 0 auto;
+}
+
+.approve-container {
+    width: 100%;
+    max-width: 900px;
+    background-color: rgba(240, 239, 242, 1);
+    font-family: 'Inter', sans-serif;
+}
+
+.title {
+    display: flex;
+    align-items: center;
+    font-weight: 700;
+    font-size: 30px;
+    line-height: 1;
+    color: rgba(0, 0, 0, 1);
+    margin-bottom: 10px;
+    margin-top: 70px;
+}
+
+.vertical-line {
+    display: inline-block;
+    height: 40px;
+    border: 4px solid rgba(0, 0, 0, 1);
+    background-color: rgba(0, 0, 0, 1);
+    margin-right: 20px;
+}
+
+.request-card {
+    width: 900px;
+    border-radius: 10px;
+    margin: 50px auto 0;
+    background-color: rgba(255, 255, 255, 1);
+    border: 1px solid rgba(225, 225, 225, 1);
+    overflow: hidden;
+}
+
+.row {
+    display: flex;
+    height: 110px;
+    border-bottom: 2px solid rgba(225, 225, 225, 1);
+    align-items: center;
+}
+
+.row:last-child {
+    border-bottom: none;
+}
+
+.label {
+    width: 350px;
+    color: rgba(115, 115, 115, 1);
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 1;
+    letter-spacing: 0.15em;
+    padding-left: 65px;
+}
+
+.year {
+    margin-right: 150px;
+}
+
+.month-day {
+    margin-right: 95px;
+}
+
+.clock_in {
+    margin-right: 50px;
+}
+
+.clock_out {
+    margin-left: 50px;
+}
+
+.break_start {
+    margin-right: 50px;
+}
+
+.break_end {
+    margin-left: 50px;
+}
+
+.time-separator {
+    display: inline-block;
+    margin: 0 20px;
+}
+
+.value {
+    flex: 1;
+    width: 550px;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 1;
+    letter-spacing: 0.15em;
+    color: rgba(0, 0, 0, 1);
+}
+
+.button-container {
+    text-align: right;
+    margin-top: 50px;
+    margin-bottom: 30px;
+}
+
+.correction-button {
+    display: inline-block;
+    width: 130px;
+    height: 50px;
+    border-radius: 5px;
+    padding: 12px 10px;
+    background: rgba(0, 0, 0, 1);
+    color: rgba(255, 255, 255, 1);
+    text-decoration: none;
+    text-align: center;
+    font-weight: 700;
+    font-size: 22px;
+    line-height: 1;
+    letter-spacing: 0.15em;
+}
+
+button[disabled].correction-button {
+    background-color: rgba(105, 105, 105, 1);
+    color: rgba(255, 255, 255, 1);
+}
+
+@media (min-width: 768px) and (max-width: 850px) {
+    .approve-container {
+        width: 100%;
+        padding: 0 16px;
+        box-sizing: border-box;
+    }
+
+    .title {
+        font-size: 23px;
+        margin-top: 40px;
+        margin-bottom: 6px;
+    }
+
+    .request-card {
+        width: 100%;
+        margin: 40px auto 20px;
+        padding: 16px;
+        box-sizing: border-box;
+    }
+
+    .row {
+        flex-direction: row; /* ←ここが重要！崩れ防止 */
+        align-items: center;
+        height: auto;
+        padding: 10px 0;
+    }
+
+    .label {
+        width: 160px; /* 少し狭くする */
+        min-width: 120px; /* 可変対応しつつ最低限確保 */
+        font-size: 12px;
+        padding-left: 4px;
+        margin-bottom: 2px;
+    }
+
+    .month-day {
+        margin-right: 6px;
+    }
+
+    .clock_in {
+        margin-right: 4px;
+    }
+
+    .clock_out {
+        margin-left: 4px;
+    }
+
+    .break_start {
+        margin-right: 4px;
+    }
+
+    .break_end {
+        margin-left: 4px;
+    }
+
+    .time-separator {
+        margin: 0 8px;
+    }
+
+    .value {
+        width: 100%;
+        font-size: 14px;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+    }
+
+    .value > * {
+        margin-right: 8px;
+        margin-bottom: 6px;
+    }
+
+    .value > *:last-child {
+        margin-right: 0;
+    }
+
+    .button-container {
+        text-align: right;
+        margin-top: 28px;
+        margin-bottom: 17px;
+    }
+
+    .correction-button {
+        font-size: 16px;
+    }
+}
+
+
+
