@@ -38,20 +38,18 @@
 
     `composer install`  
 
-  3.「.env」ファイルを作成  
+  3.権限の設定（初回のみ）  
+    以下のコマンドを実行して、Laravelのログ・キャッシュ用フォルダに書き込み権限を付与してください
+
+    ```bash
+    cd src
+    chmod -R 777 storage
+    chmod -R 777 bootstrap/cache
+    ```  
+
+  4.「.env」ファイルを作成  
 
     `cp .env.example .env`  
-
-  4..envに以下の環境変数に変更  
-
-    ``` text  
-    DB_CONNECTION=mysql
-    DB_HOST=mysql
-    DB_PORT=3306
-    DB_DATABASE=laravel_db
-    DB_USERNAME=laravel_user
-    DB_PASSWORD=laravel_pass
-    ```  
 
   5.アプリケーションキーの作成  
 
@@ -64,48 +62,6 @@
   7.シーディングの実行  
 
     `php artisan db:seed`  
-
-
-**MailHog環境構築**  
-
-  1.docker-compose.ymlに追加  
-    注意：他のサービス（php, nginx, mysqlなど）と同じインデント階層に追加  
-
-    ``` text  
-    services:
-      mailhog:
-        image: mailhog/mailhog
-        ports:
-          - "1025:1025"
-          - "8025:8025"
-    ```  
-
-  2.MailHogのセットアップ  
-
-    `docker-compose up -d mailhog`  
-
-  3.「.env」の設定  
-
-    ``` text  
-    MAIL_MAILER=smtp
-    MAIL_HOST=mailhog
-    MAIL_PORT=1025
-    MAIL_USERNAME=null
-    MAIL_PASSWORD=null
-    MAIL_ENCRYPTION=null
-    MAIL_FROM_ADDRESS="noreply@example.com"
-    MAIL_FROM_NAME="勤怠管理"
-    ```  
-
-  4.キャッシュクリア  
-
-    `php artisan config:clear`  
-    `php artisan cache:clear`  
-    `php artisan serve`  
-    `docker-compose restart
-
-以下のリンクは認証メールの遷移先です。<br>
-- http://localhost:8025/
 
 
 ## テーブル仕様
@@ -224,57 +180,6 @@ mysql -u root -p
 //パスワードはrootと入力
 CREATE DATABASE demo_test;
 SHOW DATABASES;
-
-//configファイルのdatabase.phpの追加変更
-'mysql_test' => [
-            'driver' => 'mysql',
-            'url' => env('DATABASE_URL'),
-            'host' => env('DB_HOST', '127.0.0.1'),
-            'port' => env('DB_PORT', '3306'),
-            'database' => 'demo_test',
-            'username' => 'root',
-            'password' => 'root',
-            'unix_socket' => env('DB_SOCKET', ''),
-            'charset' => 'utf8mb4',
-            'collation' => 'utf8mb4_unicode_ci',
-            'prefix' => '',
-            'prefix_indexes' => true,
-            'strict' => true,
-            'engine' => null,
-            'options' => extension_loaded('pdo_mysql') ? array_filter([
-                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
-            ]) : [],
-        ],
-
-//テスト用の.envファイル作成
-cp .env .env.testing
-
-//.env.testingファイルのAPP_ENVとAPP_KEYの編集
-APP_NAME=Laravel
-APP_ENV=test
-APP_KEY=
-APP_DEBUG=true
-APP_URL=http://localhost
-
-docker-compose exec php bash
-php artisan key:generate --env=testing
-php artisan config:clear
-php artisan migrate:fresh --env=testing
-
-//phpunitのDB_CONNECTIONとDB_DATABASEのの編集
-<php>
-        <server name="APP_ENV" value="testing"/>
-        <server name="BCRYPT_ROUNDS" value="4"/>
-        <server name="CACHE_DRIVER" value="array"/>
-        <!-- <server name="DB_CONNECTION" value="sqlite"/> -->
-        <!-- <server name="DB_DATABASE" value=":memory:"/> -->
-        <server name="DB_CONNECTION" value="mysql_test"/>
-        <server name="DB_DATABASE" value="demo_test"/>
-        <server name="MAIL_MAILER" value="array"/>
-        <server name="QUEUE_CONNECTION" value="sync"/>
-        <server name="SESSION_DRIVER" value="array"/>
-        <server name="TELESCOPE_ENABLED" value="false"/>
-    </php>
 
 //テストの実行
 ./vendor/bin/phpunit
