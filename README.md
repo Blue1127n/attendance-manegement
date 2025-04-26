@@ -23,10 +23,11 @@
     `git push origin main`  
 
   5.DockerDesktopアプリを立ち上げる  
-
-    `docker-compose up -d --build`  
-    `code .`  
-    `cd src`
+    ```bash
+    docker-compose up -d --build
+    code .
+    cd src
+    ```  
 
 
 **Laravel環境構築**  
@@ -40,7 +41,6 @@
     `composer install`  
 
   3.権限の設定（初回のみ）  
-    以下のコマンドを実行して、Laravelのログ・キャッシュ用フォルダに書き込み権限を付与してください
 
     ```bash
     chmod -R 777 storage
