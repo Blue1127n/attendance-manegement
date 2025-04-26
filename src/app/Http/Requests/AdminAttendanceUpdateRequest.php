@@ -54,16 +54,17 @@ class AdminAttendanceUpdateRequest extends FormRequest
             $end = $break['end'] ?? null;
 
             if ($start && $end) {
-                if ($start >= $end) {
+                $startTime = Carbon::parse($start);
+                $endTime = Carbon::parse($end);
+                $clockInTime = Carbon::parse($clockIn);
+                $clockOutTime = Carbon::parse($clockOut);
+
+                if ($startTime >= $endTime) {
                     $validator->errors()->add("breaks.$index.start", '休憩時間が不適切な値です');
                 }
 
-                if ($clockIn && $start < $clockIn) {
+                if ($startTime < $clockInTime || $endTime > $clockOutTime) {
                     $validator->errors()->add("breaks.$index.start", '休憩時間が勤務時間外です');
-                }
-
-                if ($clockOut && $end > $clockOut) {
-                    $validator->errors()->add("breaks.$index.end", '休憩時間が勤務時間外です');
                 }
                 }
             }
