@@ -29,8 +29,7 @@ class RegisterRequest extends FormRequest
             'string',
             'max:255',
             function ($attribute, $value, $fail) {
-                // 半角・全角スペースのどちらかが含まれているかチェック
-                if (count(preg_split('/\s+/u', trim($value))) < 2) { //preg_split('/\s+/u', trim($value))スペース（全角/半角）で分割
+                if (count(preg_split('/\s+/u', trim($value))) < 2) {
                     $fail('姓と名の間にスペースを入れて入力してください');
                 }
             },

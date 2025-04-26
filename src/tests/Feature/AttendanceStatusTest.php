@@ -16,8 +16,6 @@ class AttendanceStatusTest extends TestCase
 
     private function createUser()
     {
-        //return は 関数の「戻り値」を返すという意味
-        //この場合「作成したユーザーオブジェクトを戻す（使えるようにする）」という意味
         return User::forceCreate([
             'last_name' => '田中',
             'first_name' => '一郎',
@@ -27,17 +25,15 @@ class AttendanceStatusTest extends TestCase
         ]);
     }
 
-    //勤務外の場合勤怠ステータスが正しく表示される
     public function testStatusIdle()
     {
-        $user = $this->createUser(); //ユーザーデータを作成
-        $this->actingAs($user); //ログイン状態を作成
+        $user = $this->createUser();
+        $this->actingAs($user);
 
-        $response = $this->get('/attendance'); //ページへアクセスして表示確認 勤務外（出勤前）画面
-        $response->assertSee('勤務外'); //勤務外になっているかを確認
+        $response = $this->get('/attendance');
+        $response->assertSee('勤務外');
     }
 
-    //出勤中の場合勤怠ステータスが正しく表示される
     public function testStatusWorking()
     {
         $user = $this->createUser();
@@ -46,14 +42,13 @@ class AttendanceStatusTest extends TestCase
             'date' => Carbon::today()->toDateString(),
             'clock_in' => now(),
             'status' => '出勤中',
-        ]); //出勤データを作成
+        ]);
 
         $this->actingAs($user);
         $response = $this->get('/attendance');
-        $response->assertSee('出勤中'); //出勤中になっているかを確認
+        $response->assertSee('出勤中');
     }
 
-    //休憩中の場合勤怠ステータスが正しく表示される
     public function testStatusOnBreak()
     {
         $user = $this->createUser();
@@ -62,14 +57,13 @@ class AttendanceStatusTest extends TestCase
             'date' => Carbon::today()->toDateString(),
             'clock_in' => now(),
             'status' => '休憩中',
-        ]); //休憩データを作成
+        ]);
 
         $this->actingAs($user);
         $response = $this->get('/attendance');
         $response->assertSee('休憩中');
     }
 
-    //退勤済の場合勤怠ステータスが正しく表示される
     public function testStatusFinished()
     {
         $user = $this->createUser();

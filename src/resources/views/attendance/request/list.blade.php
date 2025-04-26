@@ -70,7 +70,6 @@
     </div>
 </div>
 
-{{-- タブ切り替えのため --}}
 <script>
     document.querySelectorAll('.tabs li').forEach(tab => {
         tab.addEventListener('click', () => {

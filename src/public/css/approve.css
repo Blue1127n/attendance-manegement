@@ -148,15 +148,15 @@ button[disabled].correction-button {
     }
 
     .row {
-        flex-direction: row; /* ←ここが重要！崩れ防止 */
+        flex-direction: row;
         align-items: center;
         height: auto;
         padding: 10px 0;
     }
 
     .label {
-        width: 160px; /* 少し狭くする */
-        min-width: 120px; /* 可変対応しつつ最低限確保 */
+        width: 160px;
+        min-width: 120px;
         font-size: 12px;
         padding-left: 4px;
         margin-bottom: 2px;

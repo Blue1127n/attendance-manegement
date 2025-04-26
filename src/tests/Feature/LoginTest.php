@@ -6,13 +6,12 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use App\Models\User;
-use Illuminate\Support\Facades\Hash; //パスワードを暗号化（ハッシュ化）するため
+use Illuminate\Support\Facades\Hash;
 
 class LoginTest extends TestCase
 {
     use RefreshDatabase;
 
-    //①メールアドレスが未入力の場合バリデーションメッセージが表示される
     public function testEmailError()
     {
         User::create([
@@ -32,7 +31,6 @@ class LoginTest extends TestCase
         $this->assertEquals('メールアドレスを入力してください', session('errors')->first('email'));
     }
 
-    //②パスワードが未入力の場合バリデーションメッセージが表示される
     public function testEmptyPassword()
     {
         User::create([
@@ -52,7 +50,6 @@ class LoginTest extends TestCase
         $this->assertEquals('パスワードを入力してください', session('errors')->first('password'));
     }
 
-    //③登録内容と一致しない場合バリデーションメッセージが表示される
     public function testMismatchEmail()
     {
         User::create([

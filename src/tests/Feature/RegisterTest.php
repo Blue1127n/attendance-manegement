@@ -11,7 +11,6 @@ class RegisterTest extends TestCase
 {
     use RefreshDatabase;
 
-    //①名前が未入力の場合バリデーションメッセージが表示される
     public function testNameError()
     {
         $response = $this->post('/register', [
@@ -25,7 +24,6 @@ class RegisterTest extends TestCase
         $this->assertEquals('お名前を入力してください', session('errors')->first('name'));
     }
 
-    //②メールアドレスが未入力の場合バリデーションメッセージが表示される
     public function testEmailError()
     {
         $response = $this->post('/register', [
@@ -39,7 +37,6 @@ class RegisterTest extends TestCase
         $this->assertEquals('メールアドレスを入力してください', session('errors')->first('email'));
     }
 
-    //③パスワードが8文字未満の場合バリデーションメッセージが表示される
     public function testShortPassword()
     {
         $response = $this->post('/register', [
@@ -53,7 +50,6 @@ class RegisterTest extends TestCase
         $this->assertEquals('パスワードは8文字以上で入力してください', session('errors')->first('password'));
     }
 
-    //④パスワードが一致しない場合バリデーションメッセージが表示される
     public function testMismatchPassword()
     {
         $response = $this->post('/register', [
@@ -67,7 +63,6 @@ class RegisterTest extends TestCase
         $this->assertEquals('パスワードと一致しません', session('errors')->first('password'));
     }
 
-    //⑤パスワードが未入力の場合バリデーションメッセージが表示される
     public function testEmptyPassword()
     {
         $response = $this->post('/register', [
@@ -81,7 +76,6 @@ class RegisterTest extends TestCase
         $this->assertEquals('パスワードを入力してください', session('errors')->first('password'));
     }
 
-    //⑥フォームに内容が入力されていた場合データが正常に保存される
     public function testRegisterOk()
     {
         $response = $this->post('/register', [
@@ -95,6 +89,6 @@ class RegisterTest extends TestCase
             'email' => 'tanaka@example.com',
         ]);
 
-        $response->assertRedirect('/email/verify'); // Fortifyを使っているから
+        $response->assertRedirect('/email/verify');
     }
 }

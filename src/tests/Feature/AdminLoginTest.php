@@ -12,7 +12,6 @@ class AdminLoginTest extends TestCase
 {
     use RefreshDatabase;
 
-    //①メールアドレスが未入力の場合バリデーションメッセージが表示される
     public function testEmailError()
     {
         User::create([
@@ -32,7 +31,6 @@ class AdminLoginTest extends TestCase
         $this->assertEquals('メールアドレスを入力してください', session('errors')->first('email'));
     }
 
-    //②パスワードが未入力の場合バリデーションメッセージが表示される
     public function testEmptyPassword()
     {
         User::create([
@@ -52,7 +50,6 @@ class AdminLoginTest extends TestCase
         $this->assertEquals('パスワードを入力してください', session('errors')->first('password'));
     }
 
-    //③登録内容と一致しない場合バリデーションメッセージが表示される
     public function testMismatchEmail()
     {
         User::create([

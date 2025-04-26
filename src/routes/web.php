@@ -25,14 +25,11 @@ use App\Models\User;
 |
 */
 
-// 会員登録処理（Fortifyではなく自作ルートでフォームリクエストを使う）
 Route::post('/register', function (RegisterRequest $request) {
-    // フルネーム（姓＋名）を分割する
     $nameParts = preg_split('/\s+/u', trim($request->name));
     $lastName = $nameParts[0] ?? '';
     $firstName = $nameParts[1] ?? '';
 
-    // ユーザー作成（last_name と first_name に分けて保存）
     $user = User::create([
         'last_name' => $lastName,
         'first_name' => $firstName,
@@ -42,23 +39,19 @@ Route::post('/register', function (RegisterRequest $request) {
 
     Auth::login($user);
 
-    // メール認証通知
     $user->sendEmailVerificationNotification();
 
     return redirect('/email/verify');
 });
 
-// メール認証画面
 Route::get('/email/verify', function () {
     return view('auth.verify-email');
 })->middleware('auth')->name('verification.notice');
 
-// 管理者ログイン画面(一般は不要)
 Route::get('/admin/login', function () {
     return view('auth.admin.login');
 })->name('admin.login');
 
-// ログイン処理（Fortifyではなく自作ルートでフォームリクエストを使う）一般ユーザー
 Route::post('/login', function (LoginRequest $request) {
     if (!Auth::attempt($request->only('email', 'password'), $request->boolean('remember'))) {
         return back()->withErrors(['email' => 'ログイン情報が登録されていません'])->withInput();
@@ -67,7 +60,6 @@ Route::post('/login', function (LoginRequest $request) {
     return redirect()->intended('/attendance');
 });
 
-// ログイン処理（Fortifyではなく自作ルートでフォームリクエストを使う）管理者
 Route::post('/admin/login', function (AdminLoginRequest $request) {
     if (!Auth::attempt($request->only('email', 'password'), $request->boolean('remember'))) {
         return back()->withErrors(['email' => 'ログイン情報が登録されていません'])->withInput();
@@ -84,10 +76,10 @@ Route::middleware('auth')->post('/logout', function (Request $request) {
 })->name('logout');
 
 Route::middleware('auth')->post('/admin/logout', function (Request $request) {
-    Auth::logout(); // ← ここは guard の指定いらない（全員一般ユーザーなので 'web'）
+    Auth::logout();
     $request->session()->invalidate();
     $request->session()->regenerateToken();
-    return redirect('/admin/login'); // ← login 画面の URL に正確に合わせてね！
+    return redirect('/admin/login');
 })->name('admin.logout');
 
 Route::middleware(['auth', 'verified'])->group(function () {

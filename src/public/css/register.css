@@ -83,10 +83,6 @@ p a {
     margin-top: 5px;
 }
 
-/*vw を使ってもいいですが、フォームの入力欄などは max-width 指定がすでにある*/
-/***フォーム系（input, buttonなど）**は、基本的に width: 100% + max-width: 680px でOK*/
-/*vw を使うと入力欄が画面に対して小さくなりすぎることがあるのでおすすめしません*/
-/*画像・ロゴなどのサイズ調整に vw を使うのはOKです*/
 @media (min-width: 768px) and (max-width: 850px) {
     .register-container {
         width: 90%;

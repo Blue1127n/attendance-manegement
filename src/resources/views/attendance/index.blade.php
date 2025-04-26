@@ -6,7 +6,6 @@
     <link rel="stylesheet" href="{{ asset('css/index.css') }}">
 @endpush
 
-{{-- 退勤済のときだけヘッダーを差し替える --}}
 @if ($attendance->status === '退勤済')
     @section('header')
         <div class="header">
@@ -37,7 +36,6 @@
             <span class="status-label active">退勤済</span>
         @endif
     </div>
-        {{-- 今の日付を 日本語の曜日付き で表示 例2025年4月20日 (日) --}}
         <h1>{{ now()->translatedFormat('Y年n月j日 (D)') }}</h1>
 
         <h2>{{ now()->format('H:i') }}</h2>

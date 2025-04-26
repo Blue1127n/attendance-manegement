@@ -22,7 +22,6 @@ class AttendancesTableSeeder extends Seeder
 
         foreach ($users as $user) {
             foreach ($months as $month) {
-                // 1〜28日の中からランダムに16日分選ぶ（重複なし）
                 $days = collect(range(1, 28))->shuffle()->take(16);
 
                 foreach ($days as $day) {

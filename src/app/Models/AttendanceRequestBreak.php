@@ -21,7 +21,7 @@ class AttendanceRequestBreak extends Model
         return $this->belongsTo(AttendanceRequest::class);
 }
 
-public function getRequestedBreakStartAttribute($value)
+    public function getRequestedBreakStartAttribute($value)
 {
         return $value ? Carbon::parse($value)->format('H:i') : null;
 }

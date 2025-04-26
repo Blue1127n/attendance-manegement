@@ -10,7 +10,7 @@ class BreakTime extends Model
 {
     use HasFactory;
 
-    protected $table = 'breaks'; // テーブル名と相違のためこれを追加する
+    protected $table = 'breaks';
 
     protected $fillable = [
         'attendance_id',
@@ -25,7 +25,7 @@ class BreakTime extends Model
 
     public function getBreakStartAttribute($value)
 {
-        return $value ? Carbon::parse($value)->format('H:i') : null; // 休憩開始時間を "HH:MM" 形式で取得するために記述
+        return $value ? Carbon::parse($value)->format('H:i') : null;
 }
 
     public function getBreakEndAttribute($value)

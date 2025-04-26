@@ -11,7 +11,6 @@
     <h1 class="title"><span class="vertical-line"></span>勤怠詳細</h1>
 
     @if (session('corrected'))
-        {{-- 修正済み表示 --}}
         <div class="detail-card">
             <div class="row"><div class="label">名前</div><div class="value">{{ $attendance->user->last_name }}&nbsp;&nbsp;&nbsp;{{ $attendance->user->first_name }}</div></div>
             <div class="row"><div class="label">日付</div><div class="value">{{ \Carbon\Carbon::parse($attendance->date)->format('Y年n月j日') }}</div></div>
@@ -40,7 +39,6 @@
             <button class="correction-button" disabled>修正済</button>
         </div>
     @else
-        {{-- 修正可能フォーム --}}
         <form action="{{ route('admin.attendance.correction', ['id' => $attendance->id]) }}" method="POST">
             @csrf
             <div class="detail-card">

@@ -48,7 +48,7 @@ class AttendanceRequest extends Model
     return $this->hasMany(AttendanceRequestBreak::class);
 }
 
-public function attendance_request_breaks()
+    public function attendance_request_breaks()
 {
     return $this->hasMany(AttendanceRequestBreak::class);
 }

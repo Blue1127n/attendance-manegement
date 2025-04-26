@@ -42,15 +42,13 @@ class AdminAttendanceUpdateTest extends TestCase
             'email_verified_at' => now(),
         ]);
 
-        return [$user1, $user2, $user3]; // ← 3人を配列で返す！
+        return [$user1, $user2, $user3];
     }
 
-    //承認待ちの修正申請が全て表示されている
     public function testPendingRequestsShown()
     {
         [$user1, $user2, $user3] = $this->createUser();
 
-        // まず勤怠データを作成（attendance_idが必要）
         $attendance = Attendance::create([
             'user_id' => $user3->id,
             'date' => now()->toDateString(),
@@ -59,11 +57,9 @@ class AdminAttendanceUpdateTest extends TestCase
             'status' => '退勤済',
         ]);
 
-        //修正申請データを1件だけ作成
-        //AttendanceRequest テーブルに「承認待ち」のデータを入れておく必要がある
         AttendanceRequest::create([
             'user_id' => $user3->id,
-            'attendance_id' => $attendance->id, //外部キー正しく指定
+            'attendance_id' => $attendance->id,
             'requested_clock_in' => '09:00:00',
             'requested_clock_out' => '19:00:00',
             'remarks' => '退勤修正申請',
@@ -72,7 +68,6 @@ class AdminAttendanceUpdateTest extends TestCase
 
         $this->actingAs($user1);
 
-        //修正申請一覧ページへアクセス
         $response = $this->get('/admin/stamp_correction_request/list');
 
         $response->assertStatus(200);
@@ -81,12 +76,10 @@ class AdminAttendanceUpdateTest extends TestCase
         $response->assertSee('承認待ち');
     }
 
-    //承認済みの修正申請が全て表示されている
     public function testApprovedRequestsShown()
     {
         [$user1, $user2, $user3] = $this->createUser();
 
-        // まず勤怠データを作成（attendance_idが必要）
         $attendance = Attendance::create([
             'user_id' => $user3->id,
             'date' => now()->toDateString(),
@@ -95,11 +88,9 @@ class AdminAttendanceUpdateTest extends TestCase
             'status' => '退勤済',
         ]);
 
-        //修正申請データを1件だけ作成
-        //AttendanceRequest テーブルに「承認待ち」のデータを入れておく必要がある
         AttendanceRequest::create([
             'user_id' => $user3->id,
-            'attendance_id' => $attendance->id, //外部キー正しく指定
+            'attendance_id' => $attendance->id,
             'requested_clock_in' => '09:00:00',
             'requested_clock_out' => '19:00:00',
             'remarks' => '退勤修正申請',
@@ -108,7 +99,6 @@ class AdminAttendanceUpdateTest extends TestCase
 
         $this->actingAs($user1);
 
-        //修正申請一覧ページへアクセス
         $response = $this->get('/admin/stamp_correction_request/list');
 
         $response->assertStatus(200);
@@ -117,12 +107,10 @@ class AdminAttendanceUpdateTest extends TestCase
         $response->assertSee('承認済み');
     }
 
-    //修正申請の詳細内容が正しく表示されている
     public function testRequestDetailShown()
     {
         [$user1, $user2, $user3] = $this->createUser();
 
-        // まず勤怠データを作成（attendance_idが必要）
         $attendance = Attendance::create([
             'user_id' => $user3->id,
             'date' => now()->toDateString(),
@@ -133,7 +121,7 @@ class AdminAttendanceUpdateTest extends TestCase
 
         $request = AttendanceRequest::create([
             'user_id' => $user3->id,
-            'attendance_id' => $attendance->id, //外部キー正しく指定
+            'attendance_id' => $attendance->id,
             'requested_clock_in' => '09:00:00',
             'requested_clock_out' => '19:00:00',
             'remarks' => '退勤修正申請',
@@ -142,10 +130,6 @@ class AdminAttendanceUpdateTest extends TestCase
 
         $this->actingAs($user1);
 
-        //申請ID（$request->id）でアクセスする必要がある
-        //Route::get('/stamp_correction_request/approve/{attendance_correct_request}',
-        // [AdminController::class, 'approveRequest'])->name('admin.request.approve.show');
-        //つまり {attendance_correct_request} の部分には「申請のID」を使わないといけない
         $response = $this->get('/admin/stamp_correction_request/approve/' . $request->id);
 
         $response->assertStatus(200);
@@ -154,12 +138,10 @@ class AdminAttendanceUpdateTest extends TestCase
         $response->assertSee('退勤修正申請');
     }
 
-    //修正申請の承認処理が正しく行われる
     public function testApproveRequestWorks()
     {
         [$user1, $user2, $user3] = $this->createUser();
 
-        // まず勤怠データを作成（attendance_idが必要）
         $attendance = Attendance::create([
             'user_id' => $user3->id,
             'date' => now()->toDateString(),
@@ -168,7 +150,6 @@ class AdminAttendanceUpdateTest extends TestCase
             'status' => '退勤済',
         ]);
 
-        //修正申請
         $request = AttendanceRequest::create([
             'user_id' => $user3->id,
             'attendance_id' => $attendance->id,
@@ -178,7 +159,6 @@ class AdminAttendanceUpdateTest extends TestCase
             'status' => '承認待ち',
         ]);
 
-        //休憩申請データも作成
         AttendanceRequestBreak::create([
             'attendance_request_id' => $request->id,
             'requested_break_start' => '12:00:00',
@@ -187,36 +167,25 @@ class AdminAttendanceUpdateTest extends TestCase
 
         $this->actingAs($user1);
 
-        // attendance リレーションを手動で読み込む
-        //$request->attendance を使ったとき、初めてbelongsTo などのリレーションを取得しようとします
-        //テスト環境ではクエリキャッシュが働かなかったり、再取得に失敗することがあるため
-        //「事前に load() で明示的に読み込んでおく」ことが安全
         $request->load('attendance');
 
-        // nullじゃないか確認 「修正申請がちゃんと勤怠データに紐づいているか」をテストする前提条件としてチェック
-        // リレーションが正しくつながっているか事前確認
         $this->assertNotNull($request->attendance);
 
-        //POSTで承認処理を実行
         $response = $this->post(route('admin.request.approve.update', $request->id));
 
-        // 正常リダイレクトを確認
         $response->assertRedirect();
 
-        //勤怠情報が更新されたか確認
         $this->assertDatabaseHas('attendances', [
             'id' => $attendance->id,
             'clock_in' => '09:00:00',
             'clock_out' => '19:00:00',
         ]);
 
-        //修正申請のステータスが更新されたか
         $this->assertDatabaseHas('attendance_requests', [
             'id' => $request->id,
             'status' => '承認済み',
         ]);
 
-        // 休憩テーブルに新しいレコードが作成されたか
         $this->assertDatabaseHas('breaks', [
             'attendance_id' => $attendance->id,
             'break_start' => '12:00:00',

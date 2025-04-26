@@ -32,7 +32,7 @@ class AdminAttendanceListTest extends TestCase
             'email_verified_at' => now(),
         ]);
 
-        return [$user1, $user2]; // ← 2人を配列で返す！
+        return [$user1, $user2];
     }
 
     private function createAttendancesFor($user, $clockIn, $clockOut, $date = null)
@@ -46,14 +46,13 @@ class AdminAttendanceListTest extends TestCase
         ]);
     }
 
-    //その日になされた全ユーザーの勤怠情報が正確に確認できる
     public function testTodayAttendances()
     {
-        [$user1, $user2] = $this->createUser(); //2人分作成して代入
+        [$user1, $user2] = $this->createUser();
         $this->createAttendancesFor($user1, '09:00:00', '18:00:00');
         $this->createAttendancesFor($user2, '10:00:00', '19:00:00');
 
-        $this->actingAs($user1); //ユーザー1を「管理者的に」ログインさせて確認
+        $this->actingAs($user1);
 
         $response = $this->get('admin/attendance/list');
 
@@ -64,14 +63,13 @@ class AdminAttendanceListTest extends TestCase
         $response->assertSee('10:00');
     }
 
-    //遷移した際に現在の日付が表示される
     public function testTodayDateShown()
     {
-        [$user1, $user2] = $this->createUser(); //2人分作成して代入
+        [$user1, $user2] = $this->createUser();
         $this->createAttendancesFor($user1, '09:00:00', '18:00:00');
         $this->createAttendancesFor($user2, '10:00:00', '19:00:00');
 
-        $this->actingAs($user1); //ユーザー1を「管理者的に」ログインさせて確認
+        $this->actingAs($user1);
 
         $response = $this->get('admin/attendance/list');
 
@@ -81,19 +79,14 @@ class AdminAttendanceListTest extends TestCase
         $response->assertSee(Carbon::today()->format('Y年n月j日'));
     }
 
-    //「前日」を押下した時に前の日の勤怠情報が表示される
     public function testSeeYesterdayRecords()
     {
-        [$user1, $user2] = $this->createUser(); //2人分作成して代入
+        [$user1, $user2] = $this->createUser();
         $this->createAttendancesFor($user1, '09:00:00', '18:00:00', Carbon::yesterday());
         $this->createAttendancesFor($user2, '10:00:00', '19:00:00', Carbon::yesterday());
 
-        $this->actingAs($user1); //ユーザー1を「管理者的に」ログインさせて確認
+        $this->actingAs($user1);
 
-        //「前日」ボタン押下する　day=YYYY-MM-DD を渡す
-        //これは文字列です ?day=：クエリパラメータの開始 → dayという名前で日付を渡す
-        //->toDateString()：それを Y-m-d（例：2025-04-09）の文字列に変換 返すのは "2025-04-09" のような文字列です
-        //PHPでは文字列の連結に . を使う admin/attendance/list?day=2025-04-09という1つのURL文字列になる
         $response = $this->get('admin/attendance/list?day=' . Carbon::yesterday()->toDateString());
 
         $response->assertStatus(200);
@@ -102,7 +95,6 @@ class AdminAttendanceListTest extends TestCase
         $response->assertSee(Carbon::yesterday()->format('Y年n月j日'));
     }
 
-    //「翌日」を押下した時に次の日の勤怠情報が表示される
     public function testSeeTomorrowRecords()
     {
         [$user1, $user2] = $this->createUser();

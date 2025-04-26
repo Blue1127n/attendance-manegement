@@ -17,11 +17,9 @@ class AttendanceRequestsTableSeeder extends Seeder
      */
     public function run()
     {
-        // 一般ユーザーのみ（admin@example.com 以外）
         $users = User::where('email', '!=', 'admin@example.com')->get();
 
         foreach ($users as $user) {
-            // 1〜5月分でランダムに2〜3件申請
             $attendances = Attendance::where('user_id', $user->id)
                 ->whereIn(\DB::raw('MONTH(date)'), [1, 2, 3, 4, 5])
                 ->inRandomOrder()
@@ -29,7 +27,6 @@ class AttendanceRequestsTableSeeder extends Seeder
                 ->get();
 
             foreach ($attendances as $attendance) {
-                // 申請内容：15分ずらして、休憩も変えてみる
                 AttendanceRequest::create([
                     'user_id' => $user->id,
                     'attendance_id' => $attendance->id,

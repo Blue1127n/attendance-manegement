@@ -18,7 +18,7 @@ class RouteServiceProvider extends ServiceProvider
      *
      * @var string
      */
-    public const HOME = '/email/verify'; //初回リダイレクト先がHOMEなので、これで登録後に遷移する場所を記述する
+    public const HOME = '/email/verify';
 
     /**
      * The controller namespace for the application.
@@ -54,8 +54,8 @@ class RouteServiceProvider extends ServiceProvider
     public function redirectTo()
     {
         return Auth::user() && Auth::user()->hasVerifiedEmail()
-            ? '/attendance' // 認証済みなら勤怠登録画面へ
-            : '/email/verify'; // 未認証ならメール認証誘導画面へ
+            ? '/attendance'
+            : '/email/verify';
     }
 
     /**

@@ -22,7 +22,6 @@
         <div class="current-month">
             <img src="{{ asset('images/calendar.png') }}" alt="カレンダーアイコン" class="calendar-icon">
             <span>{{ $currentMonth->format('Y/m') }}</span>
-            {{-- $currentMonthコントローラーで渡している 現在の月（Carbonインスタンス）$currentMonth = Carbon::now(); --}}
         </div>
 
         <form action="{{ route('user.attendance.list') }}" method="GET" class="nav-button">
@@ -60,11 +59,3 @@
 </div>
 @endsection
 
-{{-- @foreach は、**配列やコレクションのデータを「1つずつ順番に取り出して表示する」**ための構文 --}}
-{{-- @foreach ($attendances as $attendance)は$attendances に入ってる複数の勤怠データを$attendance に1件ずつ取り出して処理してる --}}
-{{-- @foreach ($データ一覧 as $1件ずつのデータ)
-        表示するHTMLや値
-        @endforeach --}}
-{{-- \Carbon\Carbon::parse($attendance->date) $attendance->date が「文字列の形（例: '2025-04-20'）」で保存されている場合に、
-    それを Carbonの日時として使えるように変換するコードです
-    parse() は、Carbon（日付ライブラリ）で日付文字列を「日付オブジェクト」に変換するためのメソッド--}}

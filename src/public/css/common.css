@@ -92,8 +92,7 @@ nav a:hover {
     }
 
     .header__logo img {
-        width: 20vw; /* タブレット用にロゴを縮小 */
-        /*画像そのもの（.header__logo img）に対して 25vw を適用するのがより適切*/
+        width: 20vw;
         padding-left: 0;
         max-width: 200px;
     }
@@ -105,7 +104,7 @@ nav a:hover {
     nav {
         display: flex;
         gap: 10px;
-        flex-wrap: nowrap; /* ナビゲーションを1行で並べる */
+        flex-wrap: nowrap;
     }
 
     nav a {
@@ -140,7 +139,7 @@ nav a:hover {
 
     nav a {
         font-size: 16px;
-        white-space: nowrap; /* ← 強制改行防止 */
+        white-space: nowrap;
     }
 
     .logout-button {

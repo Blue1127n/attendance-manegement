@@ -172,7 +172,7 @@
 
     .month-navigation {
         width: 100%;
-        min-width: auto; /* ← 明示的な最小幅を避ける */
+        min-width: auto;
         padding: 16px 15px;
         box-sizing: border-box;
     }

@@ -23,7 +23,6 @@ class CreateAttendancesTable extends Migration
             $table->text('remarks')->nullable();
             $table->timestamps();
 
-            // 1日1回の勤務記録を保証（同じユーザー & 同じ日で重複禁止）
             $table->unique(['user_id', 'date']);
         });
     }

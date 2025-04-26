@@ -10,13 +10,7 @@
 <div class="attendance-detail-container">
     <h1 class="title"><span class="vertical-line"></span>勤怠詳細</h1>
 
-    {{-- isset($request)は$request が nullでないか確認  存在しない変数にアクセスするとエラーになるのを防いでいる
-        in_array($request->status, ['承認待ち', '承認済み'])は $request->status の値が、配列の中に 含まれているか調べる
-        '承認待ち' または '承認済み' の場合に true を返す この条件が true なら「修正不可のモード」に切り替わる--}}
-
     @if (isset($request) && in_array($request->status, ['承認待ち', '承認済み']))
-        {{-- 非編集モード（承認済み or 承認待ち） --}}
-
         <div class="detail-card">
             <div class="row">
                 <div class="label">名前</div>
@@ -38,14 +32,8 @@
                 </div>
             </div>
 
-            {{-- これは「複数ある休憩時間を順番に表示するためのループ処理」です
-                $attendance->breaks は、その勤怠データに紐づく休憩時間一覧
-                たとえば、2回休憩した日には2件分のデータが入っています
-                as $index => $break の形で書くと：$index：ループの番号（0から始まる）$break：その回の休憩データ（1件） --}}
             @foreach ($attendance->breaks as $index => $break)
             <div class="row">
-                {{-- もし $index が 0 なら「休憩」と表示し、それ以外（1回目以降）なら「休憩2」「休憩3」…と表示する
-                    各休憩時間を1セットずつ表示 1回目は「休憩」、2回目からは「休憩2」「休憩3」…になるように表示 --}}
                 <div class="label">{{ $index === 0 ? '休憩' : '休憩' . ($index + 1) }}</div>
                 <div class="value">
                     <span class="time-text">{{ \Carbon\Carbon::parse($break->break_start)->format('H:i') }}</span>
@@ -71,7 +59,6 @@
         @endif
 
     @else
-        {{-- 編集モード（申請が存在しない時だけ） --}}
         <form action="{{ route('user.attendance.correction', ['id' => $attendance->id]) }}" method="POST">
             @csrf
             <div class="detail-card">
@@ -111,7 +98,6 @@
                 </div>
                 @endforeach
 
-                {{-- 「休憩の追加入力欄」を出すために使用--}}
                 @php $lastIndex = count($attendance->breaks); @endphp
                 <div class="row">
                     <div class="label">休憩{{ $lastIndex === 0 ? '' : $lastIndex + 1 }}</div>

@@ -10,7 +10,6 @@
 <div class="approve-container">
     <h1 class="title"><span class="vertical-line"></span>勤怠詳細</h1>
 
-    {{-- 非編集表示 --}}
     <div class="request-card">
         <div class="row">
             <div class="label">名前</div>
