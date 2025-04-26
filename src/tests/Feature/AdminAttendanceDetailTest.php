@@ -87,8 +87,8 @@ class AdminAttendanceDetailTest extends TestCase
 
         $response = $this->post("/admin/attendance/{$attendance->id}/update", $postData);
 
-        $response->assertSessionHasErrors(['breaks.0.end']);
-        $this->assertEquals('休憩時間が勤務時間外です', session('errors')->first('breaks.0.end'));
+        $response->assertSessionHasErrors(['breaks.0.start']);
+        $this->assertEquals('休憩時間が勤務時間外です', session('errors')->first('breaks.0.start'));
     }
 
     public function testBreakEndShowsError()
@@ -108,8 +108,8 @@ class AdminAttendanceDetailTest extends TestCase
 
         $response = $this->post("/admin/attendance/{$attendance->id}/update", $postData);
 
-        $response->assertSessionHasErrors(['breaks.0.end']);
-        $this->assertEquals('休憩時間が勤務時間外です', session('errors')->first('breaks.0.end'));
+        $response->assertSessionHasErrors(['breaks.0.start']);
+        $this->assertEquals('休憩時間が勤務時間外です', session('errors')->first('breaks.0.start'));
     }
 
     public function testRemarkShowsError()

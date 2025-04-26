@@ -75,8 +75,8 @@ class AttendanceCorrectionTest extends TestCase
 
         $response = $this->post("/attendance/{$attendance->id}/correction", $postData);
 
-        $response->assertSessionHasErrors(['breaks.0.end']);
-        $this->assertEquals('休憩時間が勤務時間外です', session('errors')->first('breaks.0.end'));
+        $response->assertSessionHasErrors(['breaks.0.start']);
+        $this->assertEquals('休憩時間が勤務時間外です', session('errors')->first('breaks.0.start'));
     }
 
     public function testBreakEndShowsError()
@@ -103,8 +103,8 @@ class AttendanceCorrectionTest extends TestCase
 
         $response = $this->post("/attendance/{$attendance->id}/correction", $postData);
 
-        $response->assertSessionHasErrors(['breaks.0.end']);
-        $this->assertEquals('休憩時間が勤務時間外です', session('errors')->first('breaks.0.end'));
+        $response->assertSessionHasErrors(['breaks.0.start']);
+        $this->assertEquals('休憩時間が勤務時間外です', session('errors')->first('breaks.0.start'));
     }
 
     public function testRemarkShowsError()
