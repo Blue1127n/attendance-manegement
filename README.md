@@ -23,10 +23,11 @@
     `git push origin main`  
 
   5.DockerDesktopアプリを立ち上げる  
-    ```bash
-    docker-compose up -d --build
-    code .
-    cd src
+
+    ```bash  
+    docker-compose up -d --build  
+    code .  
+    cd src  
     ```  
 
 
