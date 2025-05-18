@@ -40,12 +40,17 @@ class BreakTest extends TestCase
         $this->actingAs($user);
 
         $response = $this->get('/attendance');
-        $response->assertSee('休憩入');
+        $response->assertSeeText('休憩入');
 
         $this->post(route('user.attendance.startBreak'));
 
+        $this->assertDatabaseHas('attendances', [
+        'user_id' => $user->id,
+        'status' => '休憩中',
+        ]);
+
         $response = $this->get('/attendance');
-        $response->assertSee('休憩中');
+        $response->assertSeeText('休憩中');
     }
 
     public function testBreakTwice()
@@ -55,10 +60,13 @@ class BreakTest extends TestCase
 
         $this->post(route('user.attendance.startBreak'));
         $this->post(route('user.attendance.endBreak'));
+
+        $this->get('/attendance');
+
         $this->post(route('user.attendance.startBreak'));
 
         $response = $this->get('/attendance');
-        $response->assertSee('休憩中');
+        $response->assertSeeText('休憩中');
     }
 
     public function testBreakEnd()
@@ -80,10 +88,16 @@ class BreakTest extends TestCase
 
         $this->post(route('user.attendance.startBreak'));
         $this->post(route('user.attendance.endBreak'));
+
         $this->post(route('user.attendance.startBreak'));
 
+        $this->assertDatabaseHas('attendances', [
+        'user_id' => $user->id,
+        'status' => '休憩中',
+        ]);
+
         $response = $this->get('/attendance');
-        $response->assertSee('休憩戻');
+        $response->assertSeeText('休憩戻');
     }
 
     public function testBreakInList()

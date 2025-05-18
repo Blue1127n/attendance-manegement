@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Notification;
+use Illuminate\Auth\Notifications\VerifyEmail;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\AdminController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;

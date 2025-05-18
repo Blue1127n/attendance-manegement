@@ -66,8 +66,9 @@ class AdminAttendanceDetailTest extends TestCase
 
         $response = $this->post("/admin/attendance/{$attendance->id}/update", $postData);
 
-        $response->assertSessionHasErrors(['clock_in']);
-        $this->assertEquals('出勤時間もしくは退勤時間が不適切な値です', session('errors')->first('clock_in'));
+        $response->assertStatus(302);
+
+        $response->assertSessionHasErrors(['clock_in' => '出勤時間もしくは退勤時間が不適切な値です']);
     }
 
     public function testBreakStartShowsError()
@@ -87,8 +88,9 @@ class AdminAttendanceDetailTest extends TestCase
 
         $response = $this->post("/admin/attendance/{$attendance->id}/update", $postData);
 
-        $response->assertSessionHasErrors(['breaks.0.start']);
-        $this->assertEquals('休憩時間が勤務時間外です', session('errors')->first('breaks.0.start'));
+        $response->assertStatus(302);
+
+        $response->assertSessionHasErrors(['breaks.0.start' => '休憩時間が勤務時間外です']);
     }
 
     public function testBreakEndShowsError()
@@ -108,8 +110,9 @@ class AdminAttendanceDetailTest extends TestCase
 
         $response = $this->post("/admin/attendance/{$attendance->id}/update", $postData);
 
-        $response->assertSessionHasErrors(['breaks.0.start']);
-        $this->assertEquals('休憩時間が勤務時間外です', session('errors')->first('breaks.0.start'));
+        $response->assertStatus(302);
+
+        $response->assertSessionHasErrors(['breaks.0.start' => '休憩時間が勤務時間外です']);
     }
 
     public function testRemarkShowsError()
@@ -126,7 +129,8 @@ class AdminAttendanceDetailTest extends TestCase
 
         $response = $this->post("/admin/attendance/{$attendance->id}/update", $postData);
 
-        $response->assertSessionHasErrors(['remarks']);
-        $this->assertEquals('備考を記入してください', session('errors')->first('remarks'));
+        $response->assertStatus(302);
+
+        $response->assertSessionHasErrors(['remarks' => '備考を記入してください']);
     }
 }

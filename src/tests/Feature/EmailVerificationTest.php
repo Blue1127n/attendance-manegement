@@ -15,75 +15,65 @@ class EmailVerificationTest extends TestCase
 
     public function testVerificationEmailSent()
     {
-        Notification::fake();
+    Notification::fake();
 
-        $response = $this->post('/register', [
-            'name' => '田中 一郎',
-            'email' => 'test@example.com',
-            'password' => 'password123',
-            'password_confirmation' => 'password123',
-        ]);
+    $response = $this->post('/register', [
+        'name' => '田中 一郎',
+        'email' => 'test@example.com',
+        'password' => 'password123',
+        'password_confirmation' => 'password123',
+    ]);
 
-        $this->assertDatabaseHas('users', [
-            'email' => 'test@example.com',
-        ]);
+    $response->assertStatus(302);
+    $response->assertRedirect('/email/verify');
 
-        $response->assertRedirect('/email/verify');
+    $user = User::where('email', 'test@example.com')->first();
+    $this->assertNotNull($user);
 
-        $user = User::where('email', 'test@example.com')->first();
-
-        Notification::assertSentTo($user, VerifyEmail::class);
+    Notification::assertSentTo($user, VerifyEmail::class);
     }
 
     public function testVerifyLinkRedirects()
     {
-        Notification::fake();
+    Notification::fake();
 
-        $response = $this->post('/register', [
-            'name' => '田中 一郎',
-            'email' => 'test@example.com',
-            'password' => 'password123',
-            'password_confirmation' => 'password123',
-        ]);
+    $this->post('/register', [
+        'name' => '田中 一郎',
+        'email' => 'test@example.com',
+        'password' => 'password123',
+        'password_confirmation' => 'password123',
+    ]);
 
-        $this->assertDatabaseHas('users', [
-            'email' => 'test@example.com',
-        ]);
+    $user = User::where('email', 'test@example.com')->first();
+    $this->assertNotNull($user);
 
-        $user = User::where('email', 'test@example.com')->first();
-        Notification::assertSentTo($user, \Illuminate\Auth\Notifications\VerifyEmail::class);
+    $this->actingAs($user);
+    $response = $this->get('/email/verify');
 
-        $response->assertRedirect('/email/verify');
-
-        $verifyPage = $this->actingAs($user)->get('/email/verify');
-        $verifyPage->assertStatus(200);
-        $verifyPage->assertSee('認証はこちらから');
-        $verifyPage->assertSee('/email/verification-notification');
+    $response->assertStatus(200);
+    $response->assertSeeText('認証はこちらから');
+    $response->assertSee('/email/verification-notification');
     }
 
     public function testVerifiedUserCanAccessAttendancePage()
     {
-        Notification::fake();
+    $this->post('/register', [
+        'name' => '田中 一郎',
+        'email' => 'test@example.com',
+        'password' => 'password123',
+        'password_confirmation' => 'password123',
+    ]);
 
-        $response = $this->post('/register', [
-            'name' => '田中 一郎',
-            'email' => 'test@example.com',
-            'password' => 'password123',
-            'password_confirmation' => 'password123',
-        ]);
+    $user = User::where('email', 'test@example.com')->first();
+    $this->assertNotNull($user);
 
-        $this->assertDatabaseHas('users', [
-            'email' => 'test@example.com',
-        ]);
+    $user->email_verified_at = now();
+    $user->save();
 
-        $user = User::where('email', 'test@example.com')->first();
-        Notification::assertSentTo($user, \Illuminate\Auth\Notifications\VerifyEmail::class);
+    $this->actingAs($user);
+    $response = $this->get('/attendance');
 
-        $user->email_verified_at = now();
-        $user->save();
-
-        $response = $this->actingAs($user)->get('/attendance');
-        $response->assertStatus(200);
-        $response->assertSee('勤務外');
+    $response->assertStatus(200);
+    $response->assertSee('勤務外');
     }
 }

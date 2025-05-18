@@ -52,7 +52,11 @@ class ClockOutTest extends TestCase
         $this->actingAs($user);
 
         $this->post(route('user.attendance.clockIn'));
-        sleep(1);
+
+        Attendance::where('user_id', $user->id)->first()->update([
+        'clock_in' => now()->subMinutes(5),
+        ]);
+
         $this->post(route('user.attendance.clockOut'));
 
         $this->assertDatabaseHas('attendances', [
@@ -64,6 +68,6 @@ class ClockOutTest extends TestCase
         $formatted = Carbon::parse($clockOut)->format('H:i');
 
         $response = $this->get('/admin/attendance/list');
-        $response->assertSee($formatted);
+        $response->assertSeeText($formatted);
     }
 }

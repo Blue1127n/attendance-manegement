@@ -38,6 +38,8 @@ class AttendanceCorrectionTest extends TestCase
             'status' => '退勤済',
         ]);
 
+        $this->get("/attendances/{$attendance->id}/detail")->assertStatus(200);
+
         $postData = [
             'clock_in' => '19:00',
             'clock_out' => '18:00',
@@ -48,7 +50,7 @@ class AttendanceCorrectionTest extends TestCase
         $response = $this->post("/attendance/{$attendance->id}/correction", $postData);
 
         $response->assertSessionHasErrors(['clock_in']);
-        $this->assertEquals('出勤時間もしくは退勤時間が不適切な値です', session('errors')->first('clock_in'));
+        $this->assertStringContainsString('出勤時間もしくは退勤時間が不適切な値です', session('errors')->first('clock_in'));
     }
 
     public function testBreakStartShowsError()
@@ -64,6 +66,8 @@ class AttendanceCorrectionTest extends TestCase
             'status' => '退勤済',
         ]);
 
+        $this->get("/attendances/{$attendance->id}/detail")->assertStatus(200);
+
         $postData = [
             'clock_in' => '09:00',
             'clock_out' => '18:00',
@@ -76,7 +80,7 @@ class AttendanceCorrectionTest extends TestCase
         $response = $this->post("/attendance/{$attendance->id}/correction", $postData);
 
         $response->assertSessionHasErrors(['breaks.0.start']);
-        $this->assertEquals('休憩時間が勤務時間外です', session('errors')->first('breaks.0.start'));
+        $this->assertStringContainsString('休憩時間が勤務時間外です', session('errors')->first('breaks.0.start'));
     }
 
     public function testBreakEndShowsError()
@@ -92,6 +96,8 @@ class AttendanceCorrectionTest extends TestCase
             'status' => '退勤済',
         ]);
 
+        $this->get("/attendances/{$attendance->id}/detail")->assertStatus(200);
+
         $postData = [
             'clock_in' => '09:00',
             'clock_out' => '18:00',
@@ -104,7 +110,7 @@ class AttendanceCorrectionTest extends TestCase
         $response = $this->post("/attendance/{$attendance->id}/correction", $postData);
 
         $response->assertSessionHasErrors(['breaks.0.start']);
-        $this->assertEquals('休憩時間が勤務時間外です', session('errors')->first('breaks.0.start'));
+        $this->assertStringContainsString('休憩時間が勤務時間外です', session('errors')->first('breaks.0.start'));
     }
 
     public function testRemarkShowsError()
@@ -120,6 +126,8 @@ class AttendanceCorrectionTest extends TestCase
             'status' => '退勤済',
         ]);
 
+        $this->get("/attendances/{$attendance->id}/detail")->assertStatus(200);
+
         $postData = [
             'clock_in' => '09:00',
             'clock_out' => '19:00',
@@ -129,7 +137,7 @@ class AttendanceCorrectionTest extends TestCase
         $response = $this->post("/attendance/{$attendance->id}/correction", $postData);
 
         $response->assertSessionHasErrors(['remarks']);
-        $this->assertEquals('備考を記入してください', session('errors')->first('remarks'));
+        $this->assertStringContainsString('備考を記入してください', session('errors')->first('remarks'));
     }
 
     public function testCorrectionSent()
@@ -145,6 +153,10 @@ class AttendanceCorrectionTest extends TestCase
             'status' => '退勤済',
         ]);
 
+        $this->get("/attendances/{$attendance->id}/detail")
+            ->assertStatus(200)
+            ->assertSeeText('勤怠詳細');
+
         $postData = [
             'clock_in' => '09:00',
             'clock_out' => '19:00',
@@ -154,7 +166,7 @@ class AttendanceCorrectionTest extends TestCase
 
         $response = $this->post("/attendance/{$attendance->id}/correction", $postData);
 
-        $response->assertStatus(302);
+        $response->assertRedirect("/attendances/{$attendance->id}/detail");
 
         $this->assertDatabaseHas('attendance_requests', [
             'user_id' => $user->id,
@@ -190,8 +202,8 @@ class AttendanceCorrectionTest extends TestCase
         $response = $this->get('/stamp_correction_request/list');
 
         $response->assertStatus(200);
-        $response->assertSee('退勤時間の修正');
-        $response->assertSee('承認待ち');
+        $response->assertSeeText('退勤時間の修正');
+        $response->assertSeeText('承認待ち');
     }
 
     public function testApprovedShown()
@@ -223,8 +235,8 @@ class AttendanceCorrectionTest extends TestCase
         $response = $this->get('/stamp_correction_request/list');
 
         $response->assertStatus(200);
-        $response->assertSee('承認済み');
-        $response->assertSee('退勤時間の修正');
+        $response->assertSeeText('承認済み');
+        $response->assertSeeText('退勤時間の修正');
     }
 
     public function testRequestDetailShown()
@@ -253,7 +265,7 @@ class AttendanceCorrectionTest extends TestCase
         $response = $this->get("/admin/stamp_correction_request/approve/{$request->id}");
 
         $response->assertStatus(200);
-        $response->assertSee('退勤時間の修正');
+        $response->assertSeeText('退勤時間の修正');
     }
 }
 

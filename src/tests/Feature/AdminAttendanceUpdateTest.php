@@ -171,7 +171,8 @@ class AdminAttendanceUpdateTest extends TestCase
 
         $this->assertNotNull($request->attendance);
 
-        $response = $this->post(route('admin.request.approve.update', $request->id));
+        $response = $this->withoutMiddleware(\App\Http\Middleware\VerifyCsrfToken::class)
+                        ->post(route('admin.request.approve.update', $request->id));
 
         $response->assertRedirect();
 
